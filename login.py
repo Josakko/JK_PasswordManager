@@ -13,11 +13,9 @@ class Login(tk.Frame):
         self.controller = controller
         self.controller.state("zoomed")
 
-        tk.Label(self, text="JK Password Manager", font=("arial", 45, "bold"),
-                 foreground="white", background="#3d3d5c").pack(pady=25)
+        tk.Label(self, text="JK Password Manager", font=("arial", 45, "bold"), foreground="white", background="#3d3d5c").pack(pady=25)
         tk.Label(self, height=4, bg="#3d3d5c").pack()
-        tk.Label(self, text="Enter your username", font=("arial", 13),
-                 fg="white", bg="#3d3d5c").pack(pady=10)
+        tk.Label(self, text="Enter your username", font=("arial", 13), fg="white", bg="#3d3d5c").pack(pady=10)
 
         username = tk.StringVar()
         password = tk.StringVar()

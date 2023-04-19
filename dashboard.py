@@ -21,13 +21,10 @@ class Dashboard(tk.Frame):
         self.data = data
 
         heading_frame = tk.Frame(self, bg="#33334d")
-        tk.Label(heading_frame, text="User Name : ", font=("arial", 13),
-                 fg="white", bg="#33334d").pack(padx=10, side='left')
-        tk.Label(heading_frame, text=self.user_name, font=("arial", 13),
-                 fg="white", bg="#33334d").pack(side='left')
+        tk.Label(heading_frame, text="User Name : ", font=("arial", 13), fg="white", bg="#33334d").pack(padx=10, side='left')
+        tk.Label(heading_frame, text=self.user_name, font=("arial", 13), fg="white", bg="#33334d").pack(side='left')
         tk.Label(heading_frame, text=" " * 20, bg="#33334d").pack(padx=10, side='left')
-        tk.Label(heading_frame, text="Total: ", font=("arial", 13),
-                 fg="white", bg="#33334d", ).pack(side='left')
+        tk.Label(heading_frame, text="Total: ", font=("arial", 13), fg="white", bg="#33334d", ).pack(side='left')
         total_entries = tk.Label(heading_frame, text=len(self.data), font=("arial", 13), fg="white", bg="#33334d", )
         total_entries.pack(side='left')
 

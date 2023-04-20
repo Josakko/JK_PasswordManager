@@ -21,10 +21,13 @@ class Dashboard(tk.Frame):
         self.data = data
 
         heading_frame = tk.Frame(self, bg="#33334d")
-        tk.Label(heading_frame, text="User Name : ", font=("arial", 13), fg="white", bg="#33334d").pack(padx=10, side='left')
-        tk.Label(heading_frame, text=self.user_name, font=("arial", 13), fg="white", bg="#33334d").pack(side='left')
+        tk.Label(heading_frame, text="User Name : ", font=("arial", 13),
+                 fg="white", bg="#33334d").pack(padx=10, side='left')
+        tk.Label(heading_frame, text=self.user_name, font=("arial", 13),
+                 fg="white", bg="#33334d").pack(side='left')
         tk.Label(heading_frame, text=" " * 20, bg="#33334d").pack(padx=10, side='left')
-        tk.Label(heading_frame, text="Total: ", font=("arial", 13), fg="white", bg="#33334d", ).pack(side='left')
+        tk.Label(heading_frame, text="Total: ", font=("arial", 13),
+                 fg="white", bg="#33334d", ).pack(side='left')
         total_entries = tk.Label(heading_frame, text=len(self.data), font=("arial", 13), fg="white", bg="#33334d", )
         total_entries.pack(side='left')
 
@@ -62,8 +65,7 @@ class Dashboard(tk.Frame):
         for record in self.data:
             display_password = "*"*len(record[3])
             count += 1
-            data_tree.insert(parent='', index='end', iid=record[0], text='', values=(count, record[1], record[2],
-                                                                                     display_password, record[4]))
+            data_tree.insert(parent='', index='end', iid=record[0], text='', values=(count, record[1], record[2], display_password, record[4]))
 
         data_tree.pack(fill='both', expand='True')
         table_frame.pack(fill='both', expand='True')
@@ -71,8 +73,8 @@ class Dashboard(tk.Frame):
         button_frame1 = tk.Frame(self, relief='raised', bg='#3d3d5c')
 
         tk.Label(button_frame1, text='Platform', fg="white", bg="#3d3d5c").grid(row=0, column=0)
-        tk.Label(button_frame1, text='username', fg="white", bg="#3d3d5c").grid(row=0, column=1)
-        tk.Label(button_frame1, text='password', fg="white", bg="#3d3d5c").grid(row=0, column=2)
+        tk.Label(button_frame1, text='Username', fg="white", bg="#3d3d5c").grid(row=0, column=1)
+        tk.Label(button_frame1, text='Password', fg="white", bg="#3d3d5c").grid(row=0, column=2)
         add_update_site = tk.Entry(button_frame1, textvariable='add_update_site', font=13)
         add_update_site.grid(row=1, column=0)
         add_update_username = tk.Entry(button_frame1, textvariable='add_update_username', font=13)
@@ -85,8 +87,7 @@ class Dashboard(tk.Frame):
             current_time_and_date = time.strftime('%I:%M %p %d-%m-%Y')
             global count
             if selected not in data_tree.get_children():
-                row = [add_update_site.get(), add_update_username.get(), add_update_password.get(),
-                       current_time_and_date, self.user_id]
+                row = [add_update_site.get(), add_update_username.get(), add_update_password.get(), current_time_and_date, self.user_id]
                 new_id = insert(row)
                 enc = '*'*len(add_update_password.get())
                 count += 1
@@ -109,19 +110,24 @@ class Dashboard(tk.Frame):
         button_frame = tk.Frame(self, relief='raised', bg='#33334d')
         
         def delete_row():
-            decision = msg.askokcancel("Warning", "Are you sure you want to delete selected password ?")
-            if decision:
-                x = data_tree.selection()
-            delete(x)
-            global count
-            if len(x) == 1:
-                data_tree.delete(x)
-                count -= 1
-            else:
-                for i in x:
-                    data_tree.delete(i)
+            if data_tree.selection():
+                decision = msg.askokcancel("Warning", "Are you sure you want to delete selected password ?")
+                if decision:
+                    x = data_tree.selection()
+                else:
+                    return
+                delete(x)
+                global count
+                if len(x) == 1:
+                    data_tree.delete(x)
                     count -= 1
-            total_entries['text'] = count
+                else:
+                    for i in x:
+                        data_tree.delete(i)
+                        count -= 1
+                total_entries['text'] = count
+            else:
+                msg.showerror("ERROR", "Please select one above")
             
         delete_button = tk.Button(button_frame, text='Delete',bg='red', command=delete_row, relief="raised")
         delete_button.pack(pady=10, padx=10, side='left')

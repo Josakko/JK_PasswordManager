@@ -2,6 +2,7 @@ import tkinter as tk
 import time
 from app_database import sign_up
 from app_database import login
+from app_database import decrypt
 from handlers.dashboard_handler import DashboardHandler
 import tkinter.messagebox as msg
 
@@ -38,7 +39,13 @@ class Login(tk.Frame):
                 if password.get():
                     response = login(username.get(), password.get())
                     if response:
-                        user_id, user_name, data = response[0], response[1], response[2]
+                        user_id, user_name, dataEncrypted = response[0], response[1], response[2]
+                        data = []
+                        for i in dataEncrypted:
+                            password_decrypted = decrypt(i[3])
+                            dataDecrypted = i[:3] + (f"{password_decrypted}",) + i[4:]
+                            data.append(dataDecrypted)
+                        #print(data)
                         DashboardHandler(parent, controller, user_id, user_name, data)
                         incorrect_password_label['text'] = ''
                     else:

@@ -1,40 +1,25 @@
 import sqlite3
+import cryptography.fernet as fernet
 
 
+keyfile = "notes.txt"
+try:
+    with open(keyfile, "rb") as f:
+        key = f.read()
+except:
+    key = fernet.Fernet.generate_key()
+    with open(keyfile, "wb") as f:
+        f.write(key)
+f = fernet.Fernet(key)
 
-from cryptography.hazmat.primitives import hashes
-from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
-from cryptography.hazmat.backends import default_backend
-from cryptography.fernet import Fernet
-#import uuid
-#import base64
 
-backend = default_backend()
-salt = b'2444'
+def encrypt(string):
+    return f.encrypt(string.encode()).decode()
 
-kdf = PBKDF2HMAC(
-    algorithm=hashes.SHA256(),
-    length=32,
-    salt=salt,
-    iterations=100000,
-    backend=backend
-)
-
-encryptionKey = 56375904414409482593261187904535130743641248026761
-
-#key = Fernet.generate_key()
-#with open("secret.key", "wb") as key_file:
-#    key_file.write(key)
-
-#def load_key():
-#    return open("secret.key", "rb").read()
-
-def encrypt(message: bytes, key: bytes) -> bytes:
-    return Fernet(key).encrypt(message)
-
-def decrypt(message: bytes, token: bytes) -> bytes:
-    return Fernet(token).decrypt(message)
-
+    
+def decrypt(string):
+    return f.decrypt(string.encode()).decode()
+    
 
 
 def database():
@@ -46,9 +31,10 @@ def database():
     cursor.execute("""CREATE TABLE IF NOT EXISTS users(
                     user_id varchar PRIMARY KEY,
                     user_name text,  
-                    password text, 
-                    token text
+                    password text
                     )""")
+
+                    
     cursor.execute("""CREATE TABLE IF NOT EXISTS users_data(
                     id INTEGER PRIMARY KEY,
                     platform text,
@@ -88,7 +74,7 @@ def sign_up(new_username, new_password):
                 else:
                     char = 65
             new_user_id = chr(char) + str(number)
-        data = [new_user_id, new_username, new_password]
+        data = [new_user_id, new_username, encrypt(new_password)]
         sql = """INSERT INTO users(user_id,user_name,password)
         VALUES (?,?,?)"""
         cursor.execute(sql, data)
@@ -101,7 +87,6 @@ def sign_up(new_username, new_password):
 
 
 def login(username, password):
-
     conn = sqlite3.connect("password_vault.db")
     
     cursor = conn.cursor()
@@ -109,7 +94,7 @@ def login(username, password):
     cursor.execute(query, (username,))
     request = cursor.fetchone()
     if request:
-        if request[2] == password:
+        if decrypt(request[2]) == password:
             user_id = request[0]
             query = "SELECT * FROM users_data WHERE user_id= ?"
             cursor.execute(query, (user_id,))
@@ -128,6 +113,10 @@ def login(username, password):
 
 
 def insert(data):
+    password = encrypt(data[2])
+    data.pop(2)
+    data.insert(2, password)
+    
     conn = sqlite3.connect("password_vault.db")
     
     cursor = conn.cursor()
@@ -143,6 +132,10 @@ def insert(data):
 
 
 def update(data):
+    password = encrypt(data[2])
+    data.pop(2)
+    data.insert(2, password)
+    
     conn = sqlite3.connect("password_vault.db")
 
     cursor = conn.cursor()
@@ -188,4 +181,5 @@ def get_password(row_id, user_id):
     conn.commit()
 
     conn.close()
-    return requested_password
+    
+    return decrypt(requested_password)

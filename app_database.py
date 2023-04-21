@@ -50,6 +50,7 @@ def database():
     conn.close()
 
 def sign_up(new_username, new_password):
+
     conn = sqlite3.connect("password_vault.db")
     
     cursor = conn.cursor()
@@ -113,7 +114,14 @@ def login(username, password):
 
 
 def insert(data):
+    platform = encrypt(data[0])
+    print(platform)
+    username = encrypt(data[1])
     password = encrypt(data[2])
+    data.pop(0)
+    data.insert(0, platform)
+    data.pop(1)
+    data.insert(1, username)
     data.pop(2)
     data.insert(2, password)
     
@@ -132,7 +140,13 @@ def insert(data):
 
 
 def update(data):
+    platform = encrypt(data[0])
+    username = encrypt(data[1])
     password = encrypt(data[2])
+    data.pop(0)
+    data.insert(0, platform)
+    data.pop(1)
+    data.insert(1, username)
     data.pop(2)
     data.insert(2, password)
     

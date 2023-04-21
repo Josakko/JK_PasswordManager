@@ -148,7 +148,7 @@ class Dashboard(tk.Frame):
             if selected:
                 selected_password = get_password(selected, self.user_id)
                 selected_row_data = data_tree.item(selected, 'values')
-                msg.showinfo("Login Credentials", "Your password for '" + selected_row_data[1] + "' is '" + selected_password + "' and username is '" + selected_row_data[2] + "' .")
+                msg.showinfo("Login Credentials", f'Your password for "{selected_row_data[1]}" is "{selected_password}" and username is "{selected_row_data[2]}".')
             else:
                 msg.showerror("ERROR", "Please select one above")
         show_button = tk.Button(button_frame, text='Show Password', command=show_password, relief="raised")

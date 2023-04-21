@@ -42,8 +42,12 @@ class Login(tk.Frame):
                         user_id, user_name, dataEncrypted = response[0], response[1], response[2]
                         data = []
                         for i in dataEncrypted:
+                            print(i[0])
+                            platform_decrypted = decrypt(i[1])
+                            print(platform_decrypted)
+                            username_decrypted = decrypt(i[2])
                             password_decrypted = decrypt(i[3])
-                            dataDecrypted = i[:3] + (f"{password_decrypted}",) + i[4:]
+                            dataDecrypted = i[:1] + (f"{platform_decrypted}", f"{username_decrypted}", f"{password_decrypted}",) + i[4:]
                             data.append(dataDecrypted)
                         #print(data)
                         DashboardHandler(parent, controller, user_id, user_name, data)

@@ -10,7 +10,7 @@ class Jk_Password_Manager(tk.Tk):
         tk.Tk.__init__(self, *args, **kwargs)
         tk.Tk.minsize(self, 750, 600)
 
-        self.title("JK Password Manager")
+        self.title("JK PasswordManager")
         self.wm_iconbitmap("Images\\JK.ico")
 
         container = tk.Frame(self)
@@ -19,7 +19,7 @@ class Jk_Password_Manager(tk.Tk):
         container.grid_columnconfigure(0, weight=1)
         LoginHandler(parent=container, controller=self)
         db()
-
+    
 def app_window():
     app = Jk_Password_Manager()
     app.mainloop()

@@ -5,10 +5,12 @@ from app_database import login
 from app_database import decrypt
 from handlers.dashboard_handler import DashboardHandler
 import tkinter.messagebox as msg
+import tkinter as tk
+from tkinter import font
+import webbrowser
 
 
 class Login(tk.Frame):
-
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent, bg="#3d3d5c")
         self.controller = controller
@@ -42,14 +44,11 @@ class Login(tk.Frame):
                         user_id, user_name, dataEncrypted = response[0], response[1], response[2]
                         data = []
                         for i in dataEncrypted:
-                            print(i[0])
                             platform_decrypted = decrypt(i[1])
-                            print(platform_decrypted)
                             username_decrypted = decrypt(i[2])
                             password_decrypted = decrypt(i[3])
                             dataDecrypted = i[:1] + (f"{platform_decrypted}", f"{username_decrypted}", f"{password_decrypted}",) + i[4:]
                             data.append(dataDecrypted)
-                        #print(data)
                         DashboardHandler(parent, controller, user_id, user_name, data)
                         incorrect_password_label['text'] = ''
                     else:
@@ -71,12 +70,21 @@ class Login(tk.Frame):
         incorrect_password_label.pack(pady=10)
 
         def new_user_sign_up():
-
             pop = tk.Toplevel(self)
+            
+            window_width = 400
+            window_hight = 400
+
+            monitor_width = pop.winfo_screenwidth()
+            monitor_hight = pop.winfo_screenheight()
+
+            x = (monitor_width / 2) - (window_width / 2)
+            y = (monitor_hight / 2) - (window_hight / 2)
+
+            pop.geometry(f'{window_width}x{window_hight}+{int(x)}+{int(y)}')
             pop.title("Sign Up")
             pop.config(bg="#3d3d5c")
             pop.wm_iconbitmap("Images\\JK.ico")
-            pop.geometry("400x400+450+150")
             pop.resizable(width=False, height=False)
             pop.focus_force()
             pop.grab_set()
@@ -111,6 +119,8 @@ class Login(tk.Frame):
                 if (new_username.get()):
                     if new_password.get() != confirm_password.get():
                         incorrect_info_label["text"] = "Passwords do not match!"
+                    if len(new_password.get()) < 6:
+                        incorrect_info_label["text"] = "This password is too short, minimum is 6."
                     else:
                         if sign_up(new_username.get(), new_password.get()):
                             pop.destroy()
@@ -132,6 +142,48 @@ class Login(tk.Frame):
         bottom_frame = tk.Frame(self, relief='raised', borderwidth=3)
         bottom_frame.pack(fill='x', side='bottom')
 
+        def about():
+            about = tk.Toplevel(self)
+            about.title("About - JK PasswordManager")
+
+            window_width = 600
+            window_hight = 200
+
+            monitor_width = about.winfo_screenwidth()
+            monitor_hight = about.winfo_screenheight()
+
+            x = (monitor_width / 2) - (window_width / 2)
+            y = (monitor_hight / 2) - (window_hight / 2)
+
+            about.geometry(f'{window_width}x{window_hight}+{int(x)}+{int(y)}')
+            about.wm_iconbitmap("Images\\JK.ico")
+            about.configure(bg="#f5f5f5")
+            about.resizable(False, False)
+            about.focus_force()
+            about.grab_set()
+
+            custom_font = font.Font(family="Helvetica", size=12, weight="bold")
+
+            frame = tk.Frame(about, bg="#f5f5f5")
+            frame.pack(pady=50)
+
+            text = "JK PasswordManager is an open source app created by Josakko, \nall documentation and instructions can be found on"
+            label_text = tk.Label(frame, text=text, font=custom_font, bg="#f5f5f5", fg="#333333")
+            label_text.pack(side=tk.LEFT)
+
+            link_text = tk.Label(frame, text="GitHub", font=custom_font, bg="#f5f5f5", fg="#007bff", cursor="hand2")
+            link_text.pack(side=tk.LEFT, anchor="sw") #side=tk.BOTTOM
+
+            def open_link(event):
+                webbrowser.open_new("https://github.com/Josakko/JK_PasswordManager")
+
+            link_text.bind("<Button-1>", open_link)
+            
+        about_label = tk.Label(bottom_frame, text="About", fg="#007bff", font=("arial", 12, "bold"), cursor="hand2")
+        about_label.pack(padx=15, side=tk.LEFT)
+        
+        about_label.bind("<Button 1>", lambda event: about())
+            
         def tick():
             current_time = time.strftime('%I:%M %p')
             time_label.config(text=current_time)

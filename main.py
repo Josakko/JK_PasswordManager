@@ -2,8 +2,38 @@ import tkinter as tk
 from handlers.login_handler import LoginHandler
 from app_database import database as db
 from PIL import ImageTk, Image
+import requests
+import webbrowser
+from tkinter import messagebox
 
 
+#!######### VERSION #########!#
+VERSION = "v4"
+#!######### VERSION #########!#
+
+
+def check_version(version):
+    url = "https://api.github.com/repos/Josakko/JK_PasswordManager/releases/latest"
+    try: response = requests.get(url)
+    except: return
+    
+    if response.status_code == 200:
+        res = response.json()
+        latest_ver = res["tag_name"]
+        if latest_ver != version:
+            return res["html_url"]
+        else:
+            return False
+    else:
+        return False
+    
+latest_version = check_version(VERSION)
+if latest_version:
+    choice = messagebox.askyesno("Update", "Looks like new version is available, do you want to update now?")
+    if choice:
+        webbrowser.open_new(latest_version)
+
+        
 class Jk_Password_Manager(tk.Tk):
 
     def __init__(self, *args, **kwargs):

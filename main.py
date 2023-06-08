@@ -8,7 +8,7 @@ from tkinter import messagebox
 
 
 #!######### VERSION #########!#
-VERSION = "v4"
+VERSION = "v5.1"
 #!######### VERSION #########!#
 
 

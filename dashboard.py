@@ -13,7 +13,6 @@ from handlers import login_handler
 import webbrowser 
 
 class Dashboard(tk.Frame):
-
     def __init__(self, parent, controller, user_id, user_name, data):
         tk.Frame.__init__(self, parent, bg="#3d3d5c")
         self.controller = controller
@@ -31,10 +30,34 @@ class Dashboard(tk.Frame):
 
         def logout():
             login_handler.LoginHandler(parent, self.controller)
+            
         logout_button = tk.Button(heading_frame, text="LOGOUT", command=logout, width=15, relief="raised")
         logout_button.pack(padx=10, side='right')
 
         heading_frame.pack(fill='x', pady=10)
+
+        def copy_menu(event):
+            item = data_tree.identify("item", event.x, event.y)
+            column = data_tree.identify("column", event.x, event.y)
+            
+            if item and column:
+                def copy():
+                    if column == "#0": 
+                        text = data_tree.item(item, "text")
+                        name = "Platform"
+                    elif column == "#4":
+                        msg.showerror("Error", "Please use 'Copy Password' button in order to copy password!"); return
+                    else: 
+                        text = data_tree.set(item, column)
+                        name = data_tree.heading(column)['text']
+
+                    pyperclip.copy(text)
+                    msg.showinfo("Info", f"{name} copied to clipboard!")
+
+
+                menu = tk.Menu(table_frame, tearoff=0)
+                menu.add_command(label="Copy", command=copy)
+                menu.post(event.x_root, event.y_root)
 
         def deselect(event):
             data_tree.selection_remove(data_tree.focus())
@@ -44,6 +67,7 @@ class Dashboard(tk.Frame):
         tree_scroll.pack(side='right', fill='y')
         data_tree = ttk.Treeview(table_frame, yscrollcommand=tree_scroll.set, selectmode="extended")
         data_tree.bind("<Button-1>", deselect)
+        data_tree.bind("<Button-3>", copy_menu)
         tree_scroll.config(command=data_tree.yview)
 
         data_tree['columns'] = ('S.No', 'Platform', 'Username', 'Password', 'Time')

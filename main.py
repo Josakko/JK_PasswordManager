@@ -5,20 +5,21 @@ from PIL import ImageTk, Image
 import requests
 import webbrowser
 from tkinter import messagebox
+#from generator import PasswordGenerator
 
 
 #!######### VERSION #########!#
-VERSION = "v5.1"
+VERSION = "v5.2"
 #!######### VERSION #########!#
 
 
 def check_version(version):
     url = "https://api.github.com/repos/Josakko/JK_PasswordManager/releases/latest"
-    try: response = requests.get(url)
+    try: res = requests.get(url)
     except: return
     
-    if response.status_code == 200:
-        res = response.json()
+    if res.status_code == 200:
+        res = res.json()
         latest_ver = res["tag_name"]
         if latest_ver != version:
             return res["html_url"]
@@ -33,26 +34,30 @@ if latest_version:
     if choice:
         webbrowser.open_new(latest_version)
 
-        
-class Jk_Password_Manager(tk.Tk):
 
-    def __init__(self, *args, **kwargs):
-        tk.Tk.__init__(self, *args, **kwargs)
-        tk.Tk.minsize(self, 750, 600)
+class JK_Password_Manager:
+    def __init__(self, root):
+        self.root = root
+        self.root.minsize(750, 600)
+        self.root.title("JK PasswordManager")
+        #self.root.protocol("WM_DELETE_WINDOW", self.quit)
+        self.root.iconbitmap("assets\JK.ico")
 
-        self.title("JK PasswordManager")
-        self.wm_iconbitmap("Images\\JK.ico")
-
-        container = tk.Frame(self)
+        container = tk.Frame(self.root)
         container.pack(side="top", fill="both", expand=True)
         container.grid_rowconfigure(0, weight=1)
         container.grid_columnconfigure(0, weight=1)
-        LoginHandler(parent=container, controller=self)
+        LoginHandler(parent=container, controller=self.root)
         db()
     
+    #def quit(self):
+    #    self.root.destroy()
+
+    
 def app_window():
-    app = Jk_Password_Manager()
-    app.mainloop()
+    root = tk.Tk()
+    app = JK_Password_Manager(root)
+    root.mainloop()
 
 if __name__ == "__main__":
     splash = tk.Tk()
@@ -66,25 +71,21 @@ if __name__ == "__main__":
     x = (monitor_width / 2) - (splash_width / 2)
     y = (monitor_hight / 2) - (splash_hight / 2)
     
-    splash.geometry(f'{splash_width}x{splash_hight}+{int(x)}+{int(y)}')
+    splash.geometry(f"{splash_width}x{splash_hight}+{int(x)}+{int(y)}")
     splash.resizable(False, False)
     splash.overrideredirect(True)
     my_canvas = tk.Canvas(splash)
-    my_canvas.pack(fill='both', expand='true')
+    my_canvas.pack(fill="both", expand="true")
 
     def resizer(e):
         global splash_img, resize_image, new_bg
-        splash_img = Image.open("images\\loading.png")
+        splash_img = Image.open("assets\loading.png")
         resize_image = splash_img.resize((e.width, e.height), Image.ANTIALIAS)
         new_bg = ImageTk.PhotoImage(resize_image)
-        my_canvas.create_image(0, 0, image=new_bg, anchor='nw')
+        my_canvas.create_image(0, 0, image=new_bg, anchor="nw")
+
     splash.bind("<Configure>", resizer)
     splash.after(3000, splash.destroy)
     splash.mainloop()
     app_window()
 
-
-#python -m venv venv
-
-#venv\Scripts\activate
-#venv\Scripts\deactivate

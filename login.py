@@ -32,9 +32,9 @@ class Login(tk.Frame):
         password_entry_box.pack(ipady=7)
 
         def handle_focus_in(_):
-            password_entry_box.configure(fg='black', show='*')
+            password_entry_box.configure(fg="black", show="*")
 
-        password_entry_box.bind('<FocusIn>', handle_focus_in)
+        password_entry_box.bind("<FocusIn>", handle_focus_in)
 
         def check_password():
             if (username.get()):
@@ -50,23 +50,23 @@ class Login(tk.Frame):
                             dataDecrypted = i[:1] + (f"{platform_decrypted}", f"{username_decrypted}", f"{password_decrypted}",) + i[4:]
                             data.append(dataDecrypted)
                         DashboardHandler(parent, controller, user_id, user_name, data)
-                        incorrect_password_label['text'] = ''
+                        incorrect_password_label["text"] = ""
                     else:
-                        incorrect_password_label['text'] = 'Incorrect Username and Password'
-                    username.set('')
-                    password.set('')
+                        incorrect_password_label["text"] = "Incorrect Username and Password"
+                    username.set("")
+                    password.set("")
                 else:
-                    incorrect_password_label['text'] = 'Invalid Password'
+                    incorrect_password_label["text"] = "Invalid Password"
             else:
-                incorrect_password_label['text'] = 'Invalid Username'
+                incorrect_password_label["text"] = "Invalid Username"
 
         enter_button = tk.Button(self, text="Login", font=("arial", 13), command=check_password, relief="raised", borderwidth=3, height=2, width=15)
         enter_button.pack(pady=20)
 
-        forget_pass_signup_button_frame = tk.Frame(self, relief='raised', bg="#33334d")
-        forget_pass_signup_button_frame.pack(fill='both', expand=True)
+        forget_pass_signup_button_frame = tk.Frame(self, relief="raised", bg="#33334d")
+        forget_pass_signup_button_frame.pack(fill="both", expand=True)
 
-        incorrect_password_label = tk.Label(forget_pass_signup_button_frame, text='', font=("arial", 13), fg="#ff0000", bg="#33334d", anchor='n')
+        incorrect_password_label = tk.Label(forget_pass_signup_button_frame, text="", font=("arial", 13), fg="#ff0000", bg="#33334d", anchor="n")
         incorrect_password_label.pack(pady=10)
 
         def new_user_sign_up():
@@ -81,10 +81,10 @@ class Login(tk.Frame):
             x = (monitor_width / 2) - (window_width / 2)
             y = (monitor_hight / 2) - (window_hight / 2)
 
-            pop.geometry(f'{window_width}x{window_hight}+{int(x)}+{int(y)}')
+            pop.geometry(f"{window_width}x{window_hight}+{int(x)}+{int(y)}")
             pop.title("Sign Up")
             pop.config(bg="#3d3d5c")
-            pop.wm_iconbitmap("Images\\JK.ico")
+            pop.wm_iconbitmap("assets\JK.ico")
             pop.resizable(width=False, height=False)
             pop.focus_force()
             pop.grab_set()
@@ -109,11 +109,11 @@ class Login(tk.Frame):
             confirm_password_entry_box.pack(ipady=7)
 
             def seconnd_handle_focus_in(_):
-                new_password_entry_box.configure(fg='black', show='*')
-                confirm_password_entry_box.configure(fg='black', show='*')
+                new_password_entry_box.configure(fg="black", show="*")
+                confirm_password_entry_box.configure(fg="black", show="*")
 
-            new_password_entry_box.bind('<FocusIn>', seconnd_handle_focus_in)
-            confirm_password_entry_box.bind('<FocusIn>', seconnd_handle_focus_in)
+            new_password_entry_box.bind("<FocusIn>", seconnd_handle_focus_in)
+            confirm_password_entry_box.bind("<FocusIn>", seconnd_handle_focus_in)
 
             def register():
                 if (new_username.get()):
@@ -133,14 +133,14 @@ class Login(tk.Frame):
             register_button = tk.Button(pop, text="Register", font=("arial", 13), relief="raised", command=register, borderwidth=3, height=2, width=15)
             register_button.pack(pady=20)
 
-            incorrect_info_label = tk.Label(pop, text='', font=("arial", 13), fg="#ff0000", bg="#3d3d5c", anchor='n')
+            incorrect_info_label = tk.Label(pop, text="", font=("arial", 13), fg="#ff0000", bg="#3d3d5c", anchor="n")
             incorrect_info_label.pack(pady=10)
             
-        sign_up_button = tk.Button(forget_pass_signup_button_frame, text='Sign Up', command=new_user_sign_up, relief='raised', bg="#3d3d5c", font=("arial", 13), fg="white")
+        sign_up_button = tk.Button(forget_pass_signup_button_frame, text="Sign Up", command=new_user_sign_up, relief="raised", bg="#3d3d5c", font=("arial", 13), fg="white")
         sign_up_button.pack(pady=5)
 
-        bottom_frame = tk.Frame(self, relief='raised', borderwidth=3)
-        bottom_frame.pack(fill='x', side='bottom')
+        bottom_frame = tk.Frame(self, relief="raised", borderwidth=3)
+        bottom_frame.pack(fill="x", side="bottom")
 
         def about():
             about = tk.Toplevel(self)
@@ -155,8 +155,8 @@ class Login(tk.Frame):
             x = (monitor_width / 2) - (window_width / 2)
             y = (monitor_hight / 2) - (window_hight / 2)
 
-            about.geometry(f'{window_width}x{window_hight}+{int(x)}+{int(y)}')
-            about.wm_iconbitmap("Images\\JK.ico")
+            about.geometry(f"{window_width}x{window_hight}+{int(x)}+{int(y)}")
+            about.wm_iconbitmap("assets\JK.ico")
             about.configure(bg="#f5f5f5")
             about.resizable(False, False)
             about.focus_force()
@@ -185,7 +185,7 @@ class Login(tk.Frame):
         about_label.bind("<Button 1>", lambda event: about())
             
         def tick():
-            current_time = time.strftime('%I:%M %p')
+            current_time = time.strftime("%I:%M %p")
             time_label.config(text=current_time)
             time_label.after(200, tick)
 

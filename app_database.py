@@ -59,7 +59,7 @@ def sign_up(new_username, new_password):
     if result:
         result = 0
     else:
-        new_user_id = 'A1'
+        new_user_id = "A1"
         sql = "SELECT user_id FROM users ORDER BY user_id DESC LIMIT 1"
         last_id = cursor.execute(sql).fetchone()
         if last_id:
@@ -91,13 +91,13 @@ def login(username, password):
     conn = sqlite3.connect("password_vault.db")
     
     cursor = conn.cursor()
-    query = "SELECT user_id,user_name,password FROM users WHERE user_name = ?"
+    query = "SELECT user_id, user_name, password FROM users WHERE user_name = ?"
     cursor.execute(query, (username,))
     request = cursor.fetchone()
     if request:
         if decrypt(request[2]) == password:
             user_id = request[0]
-            query = "SELECT * FROM users_data WHERE user_id= ?"
+            query = "SELECT * FROM users_data WHERE user_id = ?"
             cursor.execute(query, (user_id,))
             data = cursor.fetchall()
             request = [request[0], request[1], data]
@@ -115,7 +115,6 @@ def login(username, password):
 
 def insert(data):
     platform = encrypt(data[0])
-    print(platform)
     username = encrypt(data[1])
     password = encrypt(data[2])
     data.pop(0)
@@ -165,7 +164,7 @@ def delete(row_id):
     conn = sqlite3.connect("password_vault.db")
 
     cursor = conn.cursor()
-    sql = "DELETE FROM users_data WHERE id IN ({})".format(', '.join('?' * len(row_id)))
+    sql = "DELETE FROM users_data WHERE id IN ({})".format(", ".join("?" * len(row_id)))
     cursor.execute(sql, row_id)
 
     conn.commit()

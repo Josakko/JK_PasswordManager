@@ -19,9 +19,9 @@ class PasswordGenerator:
         x = (monitor_width / 2) - (generator_width / 2)
         y = (monitor_hight / 2) - (generator_hight / 2) - 150
 
-        self.generator.geometry(f'{generator_width}x{generator_hight}+{int(x)}+{int(y)}')
+        self.generator.geometry(f"{generator_width}x{generator_hight}+{int(x)}+{int(y)}")
         self.generator.title("JK PasswordGenerator")
-        self.generator.iconbitmap("Images/JK.ico")
+        self.generator.iconbitmap("assets\JK.ico")
         self.generator.resizable(False, False)
 
         font = ("Arial", 12)
@@ -30,7 +30,9 @@ class PasswordGenerator:
         
         Label(self.generator, text="Enter the length of the password:", font=font).pack(fill=X, side=TOP)
         
-        self.len_spinbox = Spinbox(self.generator, from_=6, to=64, width=40, font=font, value=8, command=self.get_password)
+        self.len_spinbox = Spinbox(self.generator, from_=6, to=64, width=40, font=font,  command=self.get_password)
+        self.len_spinbox.delete(0, "end")
+        self.len_spinbox.insert(0, 8)
         self.len_spinbox.pack(pady=10)
         
         ttk.Separator(self.generator, orient="horizontal").pack(fill=X, pady=20)
@@ -63,6 +65,8 @@ class PasswordGenerator:
 
         self.get_password()
 
+        self.generator.mainloop()
+
     def generate(self, length, letters, digits, symbols):
         chars = ""
         
@@ -87,7 +91,7 @@ class PasswordGenerator:
         digit = self.digit.get()
         symbol = self.symbol.get()
         
-        #print(letter, digit, symbol)
+        print(letter, digit, symbol)
 
         if not letter and not digit and not symbol:
             messagebox.showerror("Error", "Please check at least one checkbox!")
@@ -100,9 +104,6 @@ class PasswordGenerator:
     def copy_password(self):
         copy(self.password_entry.get())
         messagebox.showinfo("Info", "Password copied successfully!")
-
-    def run(self):
-        self.generator.mainloop()
 
 
 #PG = PasswordGenerator()

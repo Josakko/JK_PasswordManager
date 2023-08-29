@@ -189,7 +189,7 @@ class Dashboard(tk.Frame):
         show_button.pack(pady=10, padx=15, side="left")
 
         def run_password_generator():
-            PasswordGenerator()
+            PasswordGenerator(self)
            
         password_generator_btn = tk.Button(button_frame, text="Password Generator", width=15, relief="raised", command=run_password_generator)
         password_generator_btn.pack(pady=10, padx=15, side="left")

@@ -11,11 +11,14 @@ from generator import PasswordGenerator
 import tkinter.messagebox as msg
 from handlers import login_handler
 import webbrowser 
+import csv
+
+
 
 class Dashboard(tk.Frame):
-    def __init__(self, parent, controller, user_id, user_name, data, f):
+    def __init__(self, parent, root, user_id, user_name, data, f):
         tk.Frame.__init__(self, parent, bg="#3d3d5c")
-        self.controller = controller
+        self.root = root
         self.user_id = user_id
         self.user_name = user_name
         self.data = data
@@ -30,7 +33,7 @@ class Dashboard(tk.Frame):
         total_entries.pack(side="left")
 
         def logout():
-            login_handler.LoginHandler(parent, self.controller)
+            login_handler.LoginHandler(parent, self.root)
             
         logout_button = tk.Button(heading_frame, text="LOGOUT", command=logout, width=15, relief="raised")
         logout_button.pack(padx=10, side="right")
@@ -60,8 +63,10 @@ class Dashboard(tk.Frame):
                 menu.add_command(label="Copy", command=copy)
                 menu.post(event.x_root, event.y_root)
 
+
         def deselect(event):
             data_tree.selection_remove(data_tree.focus())
+        
         
         table_frame = tk.Frame(self)
         tree_scroll = tk.Scrollbar(table_frame)
@@ -110,7 +115,7 @@ class Dashboard(tk.Frame):
 
         def add_row():
             if not add_update_platform.get() and not add_update_username.get() and not add_update_password.get():
-                msg.showerror("Error", "Fill out at leas one field!")
+                msg.showerror("Error", "Fill out at least one field!")
                 return
             
             selected = data_tree.focus()

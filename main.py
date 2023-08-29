@@ -1,6 +1,6 @@
 import tkinter as tk 
 from handlers.login_handler import LoginHandler
-from app_database import database as db
+from app_database import database as db_init
 from PIL import ImageTk, Image
 import requests
 import webbrowser
@@ -9,7 +9,7 @@ from tkinter import messagebox
 
 
 #!######### VERSION #########!#
-VERSION = "v6"
+VERSION = "v5.2"
 #!######### VERSION #########!#
 
 
@@ -47,8 +47,9 @@ class JK_Password_Manager:
         container.pack(side="top", fill="both", expand=True)
         container.grid_rowconfigure(0, weight=1)
         container.grid_columnconfigure(0, weight=1)
-        LoginHandler(parent=container, controller=self.root)
-        db()
+
+        LoginHandler(parent=container, root=self.root)
+        db_init()
     
     #def quit(self):
     #    self.root.destroy()

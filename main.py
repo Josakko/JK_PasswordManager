@@ -9,7 +9,7 @@ from tkinter import messagebox
 
 
 #!######### VERSION #########!#
-VERSION = "v5.2"
+VERSION = "v6"
 #!######### VERSION #########!#
 
 

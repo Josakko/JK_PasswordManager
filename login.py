@@ -41,15 +41,15 @@ class Login(tk.Frame):
                 if password.get():
                     response = login(username.get(), password.get())
                     if response:
-                        user_id, user_name, dataEncrypted = response[0], response[1], response[2]
+                        user_id, user_name, dataEncrypted, f = response[0], response[1], response[2], response[3]
                         data = []
                         for i in dataEncrypted:
-                            platform_decrypted = decrypt(i[1])
-                            username_decrypted = decrypt(i[2])
-                            password_decrypted = decrypt(i[3])
+                            platform_decrypted = decrypt(i[1], f)
+                            username_decrypted = decrypt(i[2], f)
+                            password_decrypted = decrypt(i[3], f)
                             dataDecrypted = i[:1] + (f"{platform_decrypted}", f"{username_decrypted}", f"{password_decrypted}",) + i[4:]
                             data.append(dataDecrypted)
-                        DashboardHandler(parent, controller, user_id, user_name, data)
+                        DashboardHandler(parent, controller, user_id, user_name, data, f)
                         incorrect_password_label["text"] = ""
                     else:
                         incorrect_password_label["text"] = "Incorrect Username and Password"
@@ -124,7 +124,8 @@ class Login(tk.Frame):
                     else:
                         if sign_up(new_username.get(), new_password.get()):
                             pop.destroy()
-                            msg.showinfo("Register", "Your registration successful.")
+                            msg.showinfo("Register", "Your registration successful!")
+                            msg.showwarning("Warning", "Make sure to save this master password since if lost all credentials saved on this account are permanently lost and cant be recovered without original password!")
                         else:
                             incorrect_info_label["text"] = "This username already exist."
                 else:
@@ -136,6 +137,8 @@ class Login(tk.Frame):
             incorrect_info_label = tk.Label(pop, text="", font=("arial", 13), fg="#ff0000", bg="#3d3d5c", anchor="n")
             incorrect_info_label.pack(pady=10)
             
+
+
         sign_up_button = tk.Button(forget_pass_signup_button_frame, text="Sign Up", command=new_user_sign_up, relief="raised", bg="#3d3d5c", font=("arial", 13), fg="white")
         sign_up_button.pack(pady=5)
 

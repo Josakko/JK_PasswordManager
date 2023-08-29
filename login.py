@@ -11,10 +11,10 @@ import webbrowser
 
 
 class Login(tk.Frame):
-    def __init__(self, parent, controller):
+    def __init__(self, parent, root):
         tk.Frame.__init__(self, parent, bg="#3d3d5c")
-        self.controller = controller
-        self.controller.state("zoomed")
+        self.root = root
+        self.root.state("zoomed")
 
         tk.Label(self, text="JK Password Manager", font=("arial", 45, "bold"), foreground="white", background="#3d3d5c").pack(pady=25)
         tk.Label(self, height=4, bg="#3d3d5c").pack()
@@ -49,7 +49,7 @@ class Login(tk.Frame):
                             password_decrypted = decrypt(i[3], f)
                             dataDecrypted = i[:1] + (f"{platform_decrypted}", f"{username_decrypted}", f"{password_decrypted}",) + i[4:]
                             data.append(dataDecrypted)
-                        DashboardHandler(parent, controller, user_id, user_name, data, f)
+                        DashboardHandler(parent, root, user_id, user_name, data, f)
                         incorrect_password_label["text"] = ""
                     else:
                         incorrect_password_label["text"] = "Incorrect Username and Password"

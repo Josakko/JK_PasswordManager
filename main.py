@@ -80,7 +80,7 @@ if __name__ == "__main__":
     def resizer(e):
         global splash_img, resize_image, new_bg
         splash_img = Image.open("assets\loading.png")
-        resize_image = splash_img.resize((e.width, e.height), Image.ANTIALIAS)
+        resize_image = splash_img.resize((e.width, e.height), Image.LANCZOS)
         new_bg = ImageTk.PhotoImage(resize_image)
         my_canvas.create_image(0, 0, image=new_bg, anchor="nw")
 

@@ -13,12 +13,13 @@ from handlers import login_handler
 import webbrowser 
 
 class Dashboard(tk.Frame):
-    def __init__(self, parent, controller, user_id, user_name, data):
+    def __init__(self, parent, controller, user_id, user_name, data, f):
         tk.Frame.__init__(self, parent, bg="#3d3d5c")
         self.controller = controller
         self.user_id = user_id
         self.user_name = user_name
         self.data = data
+        self.f = f
 
         heading_frame = tk.Frame(self, bg="#33334d")
         tk.Label(heading_frame, text="User Name : ", font=("arial", 13), fg="white", bg="#33334d").pack(padx=10, side="left")
@@ -120,7 +121,7 @@ class Dashboard(tk.Frame):
                 decision = msg.askokcancel("Warning", "Are you sure you want to update selected row?")
                 if decision:
                     row = [add_update_platform.get(), add_update_username.get(), add_update_password.get(), current_time_and_date, self.user_id, selected]
-                    update(row)
+                    update(row, self.f)
                     serial_number = data_tree.item(selected, "values")[0]
                     enc = "*" * len(add_update_password.get())
                     data_tree.item(selected, text="", values=(serial_number, add_update_platform.get(), add_update_username.get(), enc, current_time_and_date))
@@ -128,7 +129,7 @@ class Dashboard(tk.Frame):
                     return
             else:
                 row = [add_update_platform.get(), add_update_username.get(), add_update_password.get(), current_time_and_date, self.user_id]
-                new_id = insert(row)
+                new_id = insert(row, self.f)
                 enc = "*"*len(add_update_password.get())
                 count += 1
                 data_tree.insert(parent="", index="end", iid=new_id, text="", values=(count, add_update_platform.get(), add_update_username.get(), enc, current_time_and_date))
@@ -169,17 +170,18 @@ class Dashboard(tk.Frame):
         
         def copy_password():
             if data_tree.selection():
-                selected_password = get_password(data_tree.focus(), self.user_id)
+                selected_password = get_password(data_tree.focus(), self.user_id, self.f)
                 pyperclip.copy(selected_password)
                 msg.showinfo("Info", "Password copied.")
             else:
                 msg.showerror("ERROR", "Please select one above!")
+                
         copy_button = tk.Button(button_frame, text="Copy Password", command=copy_password, relief="raised", width=15)
         copy_button.pack(pady=10, padx=15, side="left")
 
         def show_password():
             if data_tree.selection():
-                selected_password = get_password(data_tree.focus(), self.user_id)
+                selected_password = get_password(data_tree.focus(), self.user_id, self.f)
                 selected_row_data = data_tree.item(data_tree.focus(), "values")
                 msg.showinfo("Login Credentials", f'Your password for "{selected_row_data[1]}" is "{selected_password}" and username is "{selected_row_data[2]}".')
             else:

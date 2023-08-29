@@ -7,8 +7,8 @@ from tkinter import ttk
 
 
 class PasswordGenerator:
-    def __init__(self):
-        self.generator = tk.Tk()
+    def __init__(self, root):
+        self.generator = tk.Toplevel(root)
 
         generator_width = 400
         generator_hight = 500
@@ -90,8 +90,6 @@ class PasswordGenerator:
         letter = self.letter.get()
         digit = self.digit.get()
         symbol = self.symbol.get()
-        
-        print(letter, digit, symbol)
 
         if not letter and not digit and not symbol:
             messagebox.showerror("Error", "Please check at least one checkbox!")

@@ -2,13 +2,13 @@ from login import Login
 
 
 class LoginHandler:
-    def __init__(self, parent, controller):
+    def __init__(self, parent, root):
         self.par = parent
-        self.con = controller
+        self.root = root
         
         self.login_frame()
 
     def login_frame(self):
-        frame = Login(self.par, self.con)
+        frame = Login(self.par, self.root)
         frame.grid(row=0, column=0, sticky="nsew")
         frame.tkraise()

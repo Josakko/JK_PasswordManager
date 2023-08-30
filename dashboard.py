@@ -1,6 +1,6 @@
-import tkinter as tk 
+import tkinter as tk
 import time
-from tkinter import ttk, font
+from tkinter import ttk, font, filedialog
 import pyperclip
 from app_database import insert
 from app_database import update
@@ -12,6 +12,7 @@ import tkinter.messagebox as msg
 from handlers import login_handler
 import webbrowser 
 import csv
+import os
 
 
 
@@ -102,6 +103,7 @@ class Dashboard(tk.Frame):
         table_frame.pack(fill="both", expand="True")
 
         button_frame1 = tk.Frame(self, relief="raised", bg="#3d3d5c")
+        button_frame1.pack(pady=10)
 
         tk.Label(button_frame1, text="Platform", fg="white", bg="#3d3d5c").grid(row=0, column=0)
         tk.Label(button_frame1, text="Username", fg="white", bg="#3d3d5c").grid(row=0, column=1)
@@ -113,43 +115,54 @@ class Dashboard(tk.Frame):
         add_update_password = tk.Entry(button_frame1, textvariable="add_update_password", font=13)
         add_update_password.grid(row=1, column=2)
 
-        def add_row():
+
+        def update_row(row_id, platform, username, password, time_stamp=time.strftime("%I:%M %p %d-%m-%Y")):
+            #time_stamp = time.strftime("%I:%M %p %d-%m-%Y")
+
+            row = [platform, username, password, time_stamp, self.user_id, row_id]
+            update(row, self.f)
+            serial_number = data_tree.item(row_id, "values")[0]
+            display_password = "*" * len(password)
+            data_tree.item(row_id, text="", values=(serial_number, platform, username, display_password, time_stamp))
+
+        def insert_row(platform, username, password, time_stamp=time.strftime("%I:%M %p %d-%m-%Y")):
+            #time_stamp = time.strftime("%I:%M %p %d-%m-%Y")
+            global count
+
+            row = [platform, username, password, time_stamp, self.user_id]
+            new_id = insert(row, self.f)
+            display_password = "*"*len(password)
+            count += 1
+            data_tree.insert(parent="", index="end", iid=new_id, text="", values=(count, platform, username, display_password, time_stamp))
+            total_entries["text"] = count
+                
+        def add_update_row():
             if not add_update_platform.get() and not add_update_username.get() and not add_update_password.get():
                 msg.showerror("Error", "Fill out at least one field!")
                 return
-            
-            selected = data_tree.focus()
-            current_time_and_date = time.strftime("%I:%M %p %d-%m-%Y")
 
-            global count
+            selected = data_tree.focus()
             if data_tree.selection():
                 decision = msg.askokcancel("Warning", "Are you sure you want to update selected row?")
                 if decision:
-                    row = [add_update_platform.get(), add_update_username.get(), add_update_password.get(), current_time_and_date, self.user_id, selected]
-                    update(row, self.f)
-                    serial_number = data_tree.item(selected, "values")[0]
-                    enc = "*" * len(add_update_password.get())
-                    data_tree.item(selected, text="", values=(serial_number, add_update_platform.get(), add_update_username.get(), enc, current_time_and_date))
+                    update_row(selected, add_update_platform.get(), add_update_username.get(), add_update_password.get())
                 else:
                     return
             else:
-                row = [add_update_platform.get(), add_update_username.get(), add_update_password.get(), current_time_and_date, self.user_id]
-                new_id = insert(row, self.f)
-                enc = "*"*len(add_update_password.get())
-                count += 1
-                data_tree.insert(parent="", index="end", iid=new_id, text="", values=(count, add_update_platform.get(), add_update_username.get(), enc, current_time_and_date))
-                total_entries["text"] = count
-                
+                insert_row(add_update_platform.get(), add_update_username.get(), add_update_password.get())
+
             add_update_platform.delete(0, "end")
             add_update_username.delete(0, "end")
             add_update_password.delete(0, "end")
 
-        add_button = tk.Button(button_frame1, command=add_row, text="Add / Update", width=20, relief="raised")
+        add_button = tk.Button(button_frame1, command=add_update_row, text="Add / Update", width=20, relief="raised")
         add_button.grid(row=1, column=3, padx=20)
-        button_frame1.pack(pady=10)
+
 
         button_frame = tk.Frame(self, relief="raised", bg="#33334d")
+        button_frame.pack(fill="x", pady=30)
         
+
         def delete_row():
             if data_tree.selection():
                 decision = msg.askokcancel("Warning", "Are you sure you want to delete selected password ?")
@@ -173,6 +186,7 @@ class Dashboard(tk.Frame):
         delete_button = tk.Button(button_frame, text="Delete",bg="red", command=delete_row, relief="raised", width=10)
         delete_button.pack(pady=10, padx=10, side="left")
         
+
         def copy_password():
             if data_tree.selection():
                 selected_password = get_password(data_tree.focus(), self.user_id, self.f)
@@ -183,6 +197,7 @@ class Dashboard(tk.Frame):
                 
         copy_button = tk.Button(button_frame, text="Copy Password", command=copy_password, relief="raised", width=15)
         copy_button.pack(pady=10, padx=15, side="left")
+
 
         def show_password():
             if data_tree.selection():
@@ -195,12 +210,14 @@ class Dashboard(tk.Frame):
         show_button = tk.Button(button_frame, text="Show Password", command=show_password, relief="raised", width=15)
         show_button.pack(pady=10, padx=15, side="left")
 
+
         def run_password_generator():
             PasswordGenerator(self)
            
         password_generator_btn = tk.Button(button_frame, text="Password Generator", width=15, relief="raised", command=run_password_generator)
         password_generator_btn.pack(pady=10, padx=15, side="left")
         
+
         def delete_all_row():
             decision = msg.askokcancel("Warning", "Are you sure to delete all ?")
             if decision:
@@ -213,7 +230,70 @@ class Dashboard(tk.Frame):
 
         delete_all_button = tk.Button(button_frame, text="Delete All Passwords", command=delete_all_row, relief="raised", bg="red", width=20)
         delete_all_button.pack(pady=10, padx=50, side="right")
-        button_frame.pack(fill="x", pady=30)
+
+
+        def get_data():
+            data = []
+
+            for id in data_tree.get_children():
+                values = data_tree.item(id, "values")
+                password = get_password(id, self.user_id, self.f)
+                row = (values[1], values[2], password, values[4])
+                data.append(row)
+
+            return data
+        
+        def write(file):
+            try:
+                with open(file, "w", newline="", encoding="utf-8") as export_f:
+                    f = csv.writer(export_f)
+                    f.writerows(get_data())
+                
+                msg.showinfo("Export", f"Successfully exported passwords to {file}!")
+            except:
+                msg.showerror("Error", "Invalid path!")
+        
+        def export():
+            msg.showwarning("Warning", "If you continue all stored credentials will be exported in unprotected plain text and will be exposed to danger of being stolen!")
+            
+            file = filedialog.asksaveasfilename(title="Export", initialfile="export.csv", defaultextension=".csv", filetypes=[("CSV Files", "*.csv")])
+            
+            if not file:
+                return
+
+            write(file)
+            
+        export_button = tk.Button(button_frame, text="Export to CSV", command=export, relief="raised", width=15)
+        export_button.pack(pady=10, padx=15, side="right")
+        
+
+        def read(file):
+            try:
+                with open(file, "r", encoding="utf-8") as import_f:
+                    data = csv.reader(import_f)
+
+                    for row in data:
+                        insert_row(row[0], row[1], row[2], time.strftime("%I:%M %p %d-%m-%Y") if not row[3] else row[3])
+                        
+                msg.showinfo("Import", f"Successfully imported passwords from {file}!")
+            except:
+                msg.showerror("Error", "Invalid file format or csv format!")
+                return
+
+        def import_():
+            file = filedialog.askopenfilename(title="Import", defaultextension=".csv", filetypes=[("CSV Files", "*.csv")])
+            if not file: return
+
+            if os.path.isfile(file):
+                read(file)
+                
+            else:
+                msg.showerror("Error", "Invalid file path!")
+                return
+            
+        import_button = tk.Button(button_frame, text="Import from CSV", command=import_, relief="raised", width=15)
+        import_button.pack(pady=10, padx=15, side="right")
+
 
         def about():
             about = tk.Toplevel(self)
@@ -256,16 +336,20 @@ class Dashboard(tk.Frame):
         bottom_frame = tk.Frame(self, relief="raised", borderwidth=3)
         bottom_frame.pack(fill="x", side="bottom")
         
-        def tick():
-            current_time = time.strftime("%I:%M %p")
-            time_label.config(text=current_time)
-            time_label.after(200, tick)
         
         about_label = tk.Label(bottom_frame, text="About", fg="#007bff", font=("arial", 12, "bold"), cursor="hand2")
         about_label.pack(side="left", padx=15)
         
         about_label.bind("<Button 1>", lambda event: about())
-        
+
+
+        def tick():
+            current_time = time.strftime("%I:%M %p")
+            time_label.config(text=current_time)
+            time_label.after(200, tick)
+
         time_label = tk.Label(bottom_frame, font=("arial", 12))
         time_label.pack()
         tick()
+
+        

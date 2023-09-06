@@ -3,10 +3,19 @@ from cryptography.fernet import Fernet
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 import base64
+import hashlib
 
 
 
-def generate_key(password: str, username: str):
+def hash(string: str, salt: str) -> str:
+    data = string.encode() + salt.encode()
+
+    algorithm = hashlib.sha512()
+    algorithm.update(data)
+    return algorithm.hexdigest()
+
+
+def generate_key(password: str, username: str) -> str:
     salt = base64.urlsafe_b64encode(f"{password}{username}".encode())
 
     kdf = PBKDF2HMAC(
@@ -17,7 +26,6 @@ def generate_key(password: str, username: str):
     )
 
     return base64.urlsafe_b64encode(kdf.derive(password.encode()))
-
 
 
 def encrypt(string: str, f: object=None, key: str=None) -> (str, Exception):
@@ -66,10 +74,13 @@ def database():
 
 def sign_up(new_username, new_password):
     conn = sqlite3.connect("password_vault.db")
-    
+
+    username = hash(new_username, new_username)
+
     cursor = conn.cursor()
     sql = "SELECT user_name FROM users WHERE user_name=?"
-    result = cursor.execute(sql, (new_username,)).fetchone()
+    result = cursor.execute(sql, (username, )).fetchone()
+
     if result:
         result = 0
     else:
@@ -90,9 +101,9 @@ def sign_up(new_username, new_password):
                     char = 65
             new_user_id = chr(char) + str(number)
 
-        key = encrypt(Fernet.generate_key().decode(), f=Fernet(generate_key(new_password, new_username)))
+        key = encrypt(Fernet.generate_key().decode(), f=Fernet(generate_key(new_password, username)))
 
-        data = [new_user_id, new_username, key]
+        data = [new_user_id, username, key]
         sql = """INSERT INTO users(user_id, user_name, password)
         VALUES (?, ?, ?)"""
         cursor.execute(sql, data)
@@ -105,9 +116,11 @@ def sign_up(new_username, new_password):
 
 
 def login(username, password):
-    password_key = generate_key(password, username)
-    password_f = Fernet(password_key)
+    username_hash = hash(username, username)
 
+    password_key = generate_key(password, username_hash)
+    password_f = Fernet(password_key)
+    
     conn = sqlite3.connect("password_vault.db")
     cursor = conn.cursor()
 
@@ -130,7 +143,7 @@ def login(username, password):
 
         #f = Fernet(key)
 
-        return [row[0], row[1], data, Fernet(key)]
+        return [row[0], username, data, Fernet(key)]
 
 
 def insert(data, f):

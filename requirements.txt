@@ -2,4 +2,3 @@ pillow
 requests
 pyperclip
 cryptography
-sqlite3

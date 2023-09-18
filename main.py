@@ -4,7 +4,7 @@ from app_database import database as db_init
 from PIL import ImageTk, Image
 import requests
 import webbrowser
-import os
+import os, sys
 from tkinter import messagebox
 #from generator import PasswordGenerator
 
@@ -101,5 +101,5 @@ if __name__ == "__main__":
     try:
         main()
     except:
-        exit()
+        sys.exit()
 

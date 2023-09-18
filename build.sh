@@ -1,18 +1,18 @@
 #!/bin/bash
 
 
-cd src/
+cd src/ || exit
 
 mkdir build/
-cd build/
+cd build/ || exit
 mkdir assets/
 cp ../assets/JK.ico assets/JK.ico
 cp ../assets/loading.png assets/loading.png
 cd ..
 
 
-python ~/.local/lib/python3.10/site-packages/nuitka/__main__.py main.py --clang --onefile  --enable-plugins=tk-inter --disable-console --clean-cache=all --remove-output --output-dir=build
+python3 ~/.local/lib/python3.10/site-packages/nuitka/__main__.py main.py --clang --enable-plugins=tk-inter --disable-console --clean-cache=all --remove-output --output-dir=build  --onefile --standalone
+
 
 echo "Compiling finished!"
-read
 

@@ -29,12 +29,6 @@ def check_version(version):
     else:
         return False
     
-latest_version = check_version(VERSION)
-if latest_version:
-    choice = messagebox.askyesno("Update", "Looks like new version is available, do you want to update now?")
-    if choice:
-        webbrowser.open_new(latest_version)
-
 
 class JK_Password_Manager:
     def __init__(self, root):
@@ -42,7 +36,7 @@ class JK_Password_Manager:
         self.root.minsize(750, 600)
         self.root.title("JK PasswordManager")
         #self.root.protocol("WM_DELETE_WINDOW", self.quit)
-        self.root.iconbitmap(os.path.join("assets", "loading.png"))
+        self.root.iconbitmap("assets/JK.ico")
 
         container = tk.Frame(self.root)
         container.pack(side="top", fill="both", expand=True)
@@ -61,7 +55,16 @@ def app_window():
     app = JK_Password_Manager(root)
     root.mainloop()
 
-if __name__ == "__main__":
+
+
+def main():
+    latest_version = check_version(VERSION)
+    if latest_version:
+        choice = messagebox.askyesno("Update", "Looks like new version is available, do you want to update now?")
+        if choice:
+            webbrowser.open_new(latest_version)
+
+
     splash = tk.Tk()
     
     splash_width = 600
@@ -81,7 +84,7 @@ if __name__ == "__main__":
 
     def resizer(e):
         global splash_img, resize_image, new_bg
-        splash_img = Image.open("assets", "loading.png")
+        splash_img = Image.open(os.path.join("assets", "loading.png")) #os.path.join("assets", "loading.png")
         resize_image = splash_img.resize((e.width, e.height), Image.LANCZOS)
         new_bg = ImageTk.PhotoImage(resize_image)
         my_canvas.create_image(0, 0, image=new_bg, anchor="nw")
@@ -90,4 +93,13 @@ if __name__ == "__main__":
     splash.after(3000, splash.destroy)
     splash.mainloop()
     app_window()
+
+
+
+
+if __name__ == "__main__":
+    try:
+        main()
+    except:
+        exit()
 

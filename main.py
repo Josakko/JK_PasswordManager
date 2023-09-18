@@ -4,6 +4,7 @@ from app_database import database as db_init
 from PIL import ImageTk, Image
 import requests
 import webbrowser
+import os
 from tkinter import messagebox
 #from generator import PasswordGenerator
 
@@ -41,7 +42,7 @@ class JK_Password_Manager:
         self.root.minsize(750, 600)
         self.root.title("JK PasswordManager")
         #self.root.protocol("WM_DELETE_WINDOW", self.quit)
-        self.root.iconbitmap("assets\JK.ico")
+        self.root.iconbitmap(os.path.join("assets", "loading.png"))
 
         container = tk.Frame(self.root)
         container.pack(side="top", fill="both", expand=True)
@@ -80,7 +81,7 @@ if __name__ == "__main__":
 
     def resizer(e):
         global splash_img, resize_image, new_bg
-        splash_img = Image.open("assets\loading.png")
+        splash_img = Image.open("assets", "loading.png")
         resize_image = splash_img.resize((e.width, e.height), Image.LANCZOS)
         new_bg = ImageTk.PhotoImage(resize_image)
         my_canvas.create_image(0, 0, image=new_bg, anchor="nw")

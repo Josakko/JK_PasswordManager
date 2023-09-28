@@ -2,5 +2,8 @@
 
 path="$(dirname "$(readlink -f "${0}")")"
 cd "${path}/usr/bin"
-exec="${path}/usr/bin/JK_PasswordManager"
+exec="${path}/usr/bin/JK_PasswordManager &"
 exec $exec
+
+bg
+diwson

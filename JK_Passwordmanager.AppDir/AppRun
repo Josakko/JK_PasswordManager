@@ -5,5 +5,5 @@ cd "${path}/usr/bin"
 exec="${path}/usr/bin/JK_PasswordManager &"
 exec $exec
 
-bg
-diwson
+#bg
+#diwson

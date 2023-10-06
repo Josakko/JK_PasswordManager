@@ -11,5 +11,7 @@ copy assets build\assets\
 
 nuitka main.py --clang --onefile  --enable-plugins=tk-inter --standalone --disable-console --clean-cache=all --remove-output --output-dir=build --windows-icon-from-ico=assets\icon.png
 
+rm -rf assets\icon.png
+
 echo Compiling finished!
 pause

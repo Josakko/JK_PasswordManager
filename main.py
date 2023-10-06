@@ -6,11 +6,13 @@ import requests
 import webbrowser
 import os, sys
 from tkinter import messagebox
+import shutil
+import time
 #from generator import PasswordGenerator
 
 
 #!######### VERSION #########!#
-VERSION = "v6.6"
+VERSION = "v6.7"
 #!######### VERSION #########!#
 
 
@@ -31,11 +33,11 @@ def check_version(version):
     
 
 class JK_Password_Manager:
-    def __init__(self, root):
+    def __init__(self, root: tk.Tk):
         self.root = root
         self.root.minsize(750, 600)
         self.root.title("JK PasswordManager")
-        #self.root.protocol("WM_DELETE_WINDOW", self.quit)
+        self.root.protocol("WM_DELETE_WINDOW", self.quit)
         self.root.iconbitmap("assets/JK.ico")
 
         container = tk.Frame(self.root)
@@ -46,8 +48,12 @@ class JK_Password_Manager:
         LoginHandler(parent=container, root=self.root)
         db_init()
     
-    #def quit(self):
-    #    self.root.destroy()
+    
+    def quit(self):
+        try: os.mkdir("backups")
+        except: pass
+        shutil.copy("password_vault.db", f"backups\\backup-{time.time()}-password_vault.db")
+        self.root.destroy()
 
     
 def app_window():

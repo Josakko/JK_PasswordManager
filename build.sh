@@ -17,8 +17,7 @@ source venv/bin/activate
 curl -o req.txt https://raw.githubusercontent.com/Josakko/JK_PasswordManager/main/requirements.txt
 pip3 install -r req.txt
 
-python3 -m nuitka main.py --clang --enable-plugins=tk-inter --disable-console --clean-cache=all --remove-output --output-dir=build --onefile --standalone
-
+python3 -m nuitka main.py --clang --disable-console --clean-cache=all --remove-output --output-dir=build --onefile --standalone --enable-plugins=tk-inter # --follow-imports
 
 deactivate
 rm -rf venv

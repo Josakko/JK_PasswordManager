@@ -8,13 +8,14 @@ import tkinter.messagebox as msg
 import tkinter as tk
 from tkinter import font
 import webbrowser
+import os
 
 
 class Login(tk.Frame):
     def __init__(self, parent, root):
         tk.Frame.__init__(self, parent, bg="#3d3d5c")
         self.root = root
-        self.root.state("zoomed")
+        #self.root.state("zoomed")
 
         tk.Label(self, text="JK Password Manager", font=("arial", 45, "bold"), foreground="white", background="#3d3d5c").pack(pady=25)
         tk.Label(self, height=4, bg="#3d3d5c").pack()
@@ -69,7 +70,7 @@ class Login(tk.Frame):
         incorrect_password_label = tk.Label(forget_pass_signup_button_frame, text="", font=("arial", 13), fg="#ff0000", bg="#33334d", anchor="n")
         incorrect_password_label.pack(pady=10)
 
-        def new_user_sign_up():
+        def sign_up_pop():
             pop = tk.Toplevel(self)
             
             window_width = 400
@@ -84,7 +85,9 @@ class Login(tk.Frame):
             pop.geometry(f"{window_width}x{window_hight}+{int(x)}+{int(y)}")
             pop.title("Sign Up")
             pop.config(bg="#3d3d5c")
-            pop.wm_iconbitmap("assets\JK.ico")
+            #pop.wm_iconbitmap("assets\JK.ico")
+            icon_image = tk.PhotoImage(file=os.path.join("assets", "icon.png"))
+            pop.iconphoto(True, icon_image)
             pop.resizable(width=False, height=False)
             pop.focus_force()
             pop.grab_set()
@@ -139,7 +142,7 @@ class Login(tk.Frame):
             
 
 
-        sign_up_button = tk.Button(forget_pass_signup_button_frame, text="Sign Up", command=new_user_sign_up, relief="raised", bg="#3d3d5c", font=("arial", 13), fg="white")
+        sign_up_button = tk.Button(forget_pass_signup_button_frame, text="Sign Up", command=sign_up_pop, relief="raised", bg="#3d3d5c", font=("arial", 13), fg="white")
         sign_up_button.pack(pady=5)
 
         bottom_frame = tk.Frame(self, relief="raised", borderwidth=3)
@@ -159,7 +162,9 @@ class Login(tk.Frame):
             y = (monitor_hight / 2) - (window_hight / 2)
 
             about.geometry(f"{window_width}x{window_hight}+{int(x)}+{int(y)}")
-            about.wm_iconbitmap("assets\JK.ico")
+            #about.wm_iconbitmap("assets\JK.ico")
+            icon_image = tk.PhotoImage(file=os.path.join("assets", "icon.png"))
+            about.iconphoto(True, icon_image)
             about.configure(bg="#f5f5f5")
             about.resizable(False, False)
             about.focus_force()

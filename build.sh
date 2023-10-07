@@ -6,7 +6,7 @@ cd src/ || exit
 mkdir build/
 cd build/ || exit
 mkdir assets/
-cp ../assets/JK.ico assets/JK.ico
+cp ../assets/icon.png assets/icon.png
 cp ../assets/loading.png assets/loading.png
 cd ..
 
@@ -22,6 +22,8 @@ python3 -m nuitka main.py --clang --disable-console --clean-cache=all --remove-o
 deactivate
 rm -rf venv
 rm -rf req.txt
+
+mv build/main.bin build/JK_PasswordManager
 
 echo "Compiling finished!"
 

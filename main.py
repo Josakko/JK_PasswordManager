@@ -12,7 +12,7 @@ import time
 
 
 #!######### VERSION #########!#
-VERSION = "v6.7"
+VERSION = "v6.8"
 #!######### VERSION #########!#
 
 
@@ -38,7 +38,9 @@ class JK_Password_Manager:
         self.root.minsize(750, 600)
         self.root.title("JK PasswordManager")
         self.root.protocol("WM_DELETE_WINDOW", self.quit)
-        self.root.iconbitmap("assets/JK.ico")
+        #self.root.iconbitmap(os.path.join("assets", "icon.png"))
+        icon_image = tk.PhotoImage(file=os.path.join("assets", "icon.png"))
+        root.iconphoto(True, icon_image)
 
         container = tk.Frame(self.root)
         container.pack(side="top", fill="both", expand=True)
@@ -52,7 +54,7 @@ class JK_Password_Manager:
     def quit(self):
         try: os.mkdir("backups")
         except: pass
-        shutil.copy("password_vault.db", f"backups\\backup-{time.time()}-password_vault.db")
+        shutil.copy("password_vault.db", os.path.join("backups", f"backup-{time.time()}-password_vault.db"))
         self.root.destroy()
 
     
@@ -102,10 +104,11 @@ def main():
 
 
 
+
 if __name__ == "__main__":
     try:
         main()
     except Exception as e:
-        print(e)
+        #print(e)
         sys.exit()
 

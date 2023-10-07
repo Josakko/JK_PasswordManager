@@ -19,17 +19,17 @@ VERSION = "v6.8"
 def check_version(version):
     url = "https://api.github.com/repos/Josakko/JK_PasswordManager/releases/latest"
     try: res = requests.get(url)
-    except: return
+    except: return False, None
     
     if res.status_code == 200:
         res = res.json()
         latest_ver = res["tag_name"]
         if latest_ver != version:
-            return res["html_url"]
+            return res["html_url"], latest_ver
         else:
-            return False
+            return False, None
     else:
-        return False
+        return False, None
     
 
 class JK_Password_Manager:
@@ -69,10 +69,10 @@ def app_window():
 
 def main():
     latest_version = check_version(VERSION)
-    if latest_version:
-        choice = messagebox.askyesno("Update", f"Looks like new version is available, do you want to update now?\nYour current version is {VERSION} and latest release is {latest_version}.")
+    if latest_version[0]:
+        choice = messagebox.askyesno("Update", f"Looks like new version is available, do you want to update now?\nYour current version is {VERSION} and latest release is {latest_version[1]}.")
         if choice:
-            webbrowser.open_new(latest_version)
+            webbrowser.open_new(latest_version[0])
 
 
     splash = tk.Tk()

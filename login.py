@@ -15,7 +15,7 @@ class Login(tk.Frame):
     def __init__(self, parent, root):
         tk.Frame.__init__(self, parent, bg="#3d3d5c")
         self.root = root
-        #self.root.state("zoomed")
+        self.root.state("zoomed")
 
         tk.Label(self, text="JK Password Manager", font=("arial", 45, "bold"), foreground="white", background="#3d3d5c").pack(pady=25)
         tk.Label(self, height=4, bg="#3d3d5c").pack()

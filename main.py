@@ -68,7 +68,7 @@ def app_window():
 def main():
     latest_version = check_version(VERSION)
     if latest_version:
-        choice = messagebox.askyesno("Update", "Looks like new version is available, do you want to update now?")
+        choice = messagebox.askyesno("Update", f"Looks like new version is available, do you want to update now?\nYour current version is {VERSION} and latest release is {latest_version}.")
         if choice:
             webbrowser.open_new(latest_version)
 

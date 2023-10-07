@@ -38,9 +38,11 @@ class JK_Password_Manager:
         self.root.minsize(750, 600)
         self.root.title("JK PasswordManager")
         self.root.protocol("WM_DELETE_WINDOW", self.quit)
-        #self.root.iconbitmap(os.path.join("assets", "icon.png"))
-        icon_image = tk.PhotoImage(file=os.path.join("assets", "icon.png"))
-        root.iconphoto(True, icon_image)
+        
+        self.root.iconbitmap(os.path.join("assets", "JK.ico"))
+
+        #icon_image = tk.PhotoImage(file=os.path.join("assets", "icon.png"))
+        #self.root.iconphoto(True, icon_image)
 
         container = tk.Frame(self.root)
         container.pack(side="top", fill="both", expand=True)
@@ -90,12 +92,14 @@ def main():
     my_canvas = tk.Canvas(splash)
     my_canvas.pack(fill="both", expand="true")
 
+
     def resizer(e):
         global splash_img, resize_image, new_bg
         splash_img = Image.open(os.path.join("assets", "loading.png")) #os.path.join("assets", "loading.png")
         resize_image = splash_img.resize((e.width, e.height), Image.LANCZOS)
         new_bg = ImageTk.PhotoImage(resize_image)
         my_canvas.create_image(0, 0, image=new_bg, anchor="nw")
+
 
     splash.bind("<Configure>", resizer)
     splash.after(3000, splash.destroy)
@@ -110,6 +114,6 @@ if __name__ == "__main__":
         main()
     except:
     #except Exception as e:
-        #print(e)
+    #    print(e)
         sys.exit()
 

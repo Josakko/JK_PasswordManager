@@ -4,6 +4,7 @@ import tkinter as tk
 from tkinter import *
 from tkinter import messagebox
 from tkinter import ttk
+import os
 
 
 class PasswordGenerator:
@@ -21,7 +22,9 @@ class PasswordGenerator:
 
         self.generator.geometry(f"{generator_width}x{generator_hight}+{int(x)}+{int(y)}")
         self.generator.title("JK PasswordGenerator")
-        self.generator.iconbitmap("assets\JK.ico")
+        #self.generator.iconbitmap("assets\JK.ico")
+        icon_image = tk.PhotoImage(file=os.path.join("assets", "icon.png"))
+        self.generator.iconphoto(True, icon_image)
         self.generator.resizable(False, False)
 
         font = ("Arial", 12)

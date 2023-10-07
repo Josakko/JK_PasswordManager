@@ -309,7 +309,9 @@ class Dashboard(tk.Frame):
             y = (monitor_hight / 2) - (window_hight / 2)
 
             about.geometry(f"{window_width}x{window_hight}+{int(x)}+{int(y)}")
-            about.iconbitmap("assets\JK.ico")
+            #about.iconbitmap("assets\JK.ico")
+            icon_image = tk.PhotoImage(file=os.path.join("assets", "icon.png"))
+            about.iconphoto(True, icon_image)
             about.configure(bg="#f5f5f5")
             about.resizable(False, False)
             about.focus_force()

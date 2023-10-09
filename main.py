@@ -4,15 +4,16 @@ from app_database import database as db_init
 from PIL import ImageTk, Image
 import requests
 import webbrowser
-import os, sys
+import os#, sys
 from tkinter import messagebox
 import shutil
 import time
 #from generator import PasswordGenerator
 
+#LANCZOS = 1
 
 #!######### VERSION #########!#
-VERSION = "v6.8"
+VERSION = "v6.9"
 #!######### VERSION #########!#
 
 
@@ -37,12 +38,12 @@ class JK_Password_Manager:
         self.root = root
         self.root.minsize(750, 600)
         self.root.title("JK PasswordManager")
-        self.root.protocol("WM_DELETE_WINDOW", self.quit)
+        #self.root.protocol("WM_DELETE_WINDOW", self.quit)
         
-        self.root.iconbitmap(os.path.join("assets", "JK.ico"))
+        #self.root.iconbitmap(os.path.join("assets", "JK.ico"))
 
-        #icon_image = tk.PhotoImage(file=os.path.join("assets", "icon.png"))
-        #self.root.iconphoto(True, icon_image)
+        icon = tk.PhotoImage(file=os.path.join("assets", "icon.png"))
+        self.root.iconphoto(True, icon)
 
         container = tk.Frame(self.root)
         container.pack(side="top", fill="both", expand=True)
@@ -53,11 +54,11 @@ class JK_Password_Manager:
         db_init()
     
     
-    def quit(self):
-        try: os.mkdir("backups")
-        except: pass
-        shutil.copy("password_vault.db", os.path.join("backups", f"backup-{time.time()}-password_vault.db"))
-        self.root.destroy()
+    #def quit(self):
+    #    try: os.mkdir("backups")
+    #    except: pass
+    #    shutil.copy("password_vault.db", os.path.join("backups", f"backup-{time.time()}-password_vault.db"))
+    #    self.root.destroy()
 
     
 def app_window():
@@ -68,15 +69,9 @@ def app_window():
 
 
 def main():
-    latest_version = check_version(VERSION)
-    if latest_version[0]:
-        choice = messagebox.askyesno("Update", f"Looks like new version is available, do you want to update now?\nYour current version is {VERSION} and latest release is {latest_version[1]}.")
-        if choice:
-            webbrowser.open_new(latest_version[0])
-
-
     splash = tk.Tk()
-    
+    splash.withdraw()
+
     splash_width = 600
     splash_hight = 400
     
@@ -87,26 +82,38 @@ def main():
     y = (monitor_hight / 2) - (splash_hight / 2)
     
     splash.geometry(f"{splash_width}x{splash_hight}+{int(x)}+{int(y)}")
+
     splash.resizable(False, False)
     splash.overrideredirect(True)
-    my_canvas = tk.Canvas(splash)
-    my_canvas.pack(fill="both", expand="true")
+    canvas = tk.Canvas(splash)
+    canvas.pack(fill="both", expand="true")
+    icon = tk.PhotoImage(file=os.path.join("assets", "icon.png"))
+    splash.iconphoto(True, icon)
+
+    
+    latest_version = check_version(VERSION)
+    if latest_version[0]:
+        choice = messagebox.askyesno("Update", f"Looks like new version is available, do you want to update now?\nYour current version is {VERSION} and latest release is {latest_version[1]}.")
+        if choice:
+            webbrowser.open_new(latest_version[0])
 
 
-    def resizer(e):
+    splash.deiconify()
+
+
+    def resizer(event):
         global splash_img, resize_image, new_bg
         splash_img = Image.open(os.path.join("assets", "loading.png")) #os.path.join("assets", "loading.png")
-        resize_image = splash_img.resize((e.width, e.height), Image.LANCZOS)
+        resize_image = splash_img.resize((event.width, event.height), Image.LANCZOS)
         new_bg = ImageTk.PhotoImage(resize_image)
-        my_canvas.create_image(0, 0, image=new_bg, anchor="nw")
+        canvas.create_image(0, 0, image=new_bg, anchor="nw")
 
 
     splash.bind("<Configure>", resizer)
     splash.after(3000, splash.destroy)
     splash.mainloop()
+
     app_window()
-
-
 
 
 if __name__ == "__main__":
@@ -115,5 +122,12 @@ if __name__ == "__main__":
     except:
     #except Exception as e:
     #    print(e)
-        sys.exit()
+        pass
+
+    try: os.mkdir("backups")
+    except: pass
+    try: shutil.copy("password_vault.db", os.path.join("backups", f"backup-{time.time()}-password_vault.db"))
+    except: pass
+
+    #sys.exit()
 

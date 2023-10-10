@@ -4,7 +4,7 @@ from app_database import database as db_init
 from PIL import ImageTk, Image
 import requests
 import webbrowser
-import os#, sys
+import os, sys
 from tkinter import messagebox
 import shutil
 import time
@@ -129,5 +129,5 @@ if __name__ == "__main__":
     try: shutil.copy("password_vault.db", os.path.join("backups", f"backup-{time.time()}-password_vault.db"))
     except: pass
 
-    #sys.exit()
+    sys.exit()
 

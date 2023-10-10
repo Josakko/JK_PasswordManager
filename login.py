@@ -14,8 +14,8 @@ import os
 class Login(tk.Frame):
     def __init__(self, parent, root):
         tk.Frame.__init__(self, parent, bg="#3d3d5c")
-        self.root = root
-        self.root.wm_state("zoomed") # zoomed and withdrawn are windows only other options - normal, icon, iconic
+        self.root: tk.Tk = root
+        self.root.wm_state("zoomed") #! zoomed and withdrawn are windows only other options - normal, icon, iconic
 
         tk.Label(self, text="JK Password Manager", font=("arial", 45, "bold"), foreground="white", background="#3d3d5c").pack(pady=25)
         tk.Label(self, height=4, bg="#3d3d5c").pack()
@@ -168,7 +168,7 @@ class Login(tk.Frame):
             about.configure(bg="#f5f5f5")
             about.resizable(False, False)
             about.focus_force()
-            about.grab_set()
+            #about.grab_set() #! trouble for some reason
 
             custom_font = font.Font(family="Helvetica", size=12, weight="bold")
 

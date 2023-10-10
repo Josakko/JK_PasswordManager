@@ -13,7 +13,7 @@ import time
 #LANCZOS = 1
 
 #!######### VERSION #########!#
-VERSION = "v6.9"
+VERSION = "v6.10"
 #!######### VERSION #########!#
 
 

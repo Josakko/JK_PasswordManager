@@ -26,6 +26,9 @@ class PasswordGenerator:
         icon_image = tk.PhotoImage(file=os.path.join("assets", "icon.png"))
         self.generator.iconphoto(True, icon_image)
         self.generator.resizable(False, False)
+        
+        self.generator.focus_force()
+        self.generator.grab_set()
 
         font = ("Arial", 12)
 

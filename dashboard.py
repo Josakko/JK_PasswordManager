@@ -315,7 +315,7 @@ class Dashboard(tk.Frame):
             about.configure(bg="#f5f5f5")
             about.resizable(False, False)
             about.focus_force()
-            about.grab_set()
+            #about.grab_set() #! trouble for some reason
 
             custom_font = font.Font(family="Helvetica", size=12, weight="bold")
 

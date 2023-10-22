@@ -13,8 +13,26 @@ import time
 #LANCZOS = 1
 
 #!######### VERSION #########!#
-VERSION = "v6.10"
+VERSION = "v6.10.1"
 #!######### VERSION #########!#
+
+
+def disown_terminal():
+    pid = os.fork()
+
+    if pid > 0:
+        os._exit(0)
+
+    os.setsid()
+    
+    os.close(0)
+    os.close(1)
+    os.close(2)
+
+    with open(os.devnull, "r") as nullfile:
+        os.dup2(nullfile.fileno(), 0)
+        os.dup2(nullfile.fileno(), 1)
+        os.dup2(nullfile.fileno(), 2)
 
 
 def check_version(version):
@@ -117,6 +135,10 @@ def main():
 
 
 if __name__ == "__main__":
+    try: 
+        disown_terminal()
+    except: pass
+    
     try:
         main()
     except:

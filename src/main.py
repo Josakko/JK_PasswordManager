@@ -1,6 +1,6 @@
 import tkinter as tk 
 from handlers.login_handler import LoginHandler
-from app_database import database as db_init
+from database import Database
 from PIL import ImageTk, Image
 import utils
 import webbrowser
@@ -32,7 +32,7 @@ def app_window():
     bottom_bar(root)
 
     LoginHandler(parent=container, root=root)
-    db_init()
+    Database().init_db()
 
     root.mainloop()
 

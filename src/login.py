@@ -1,5 +1,5 @@
 import tkinter as tk  
-from app_database import login
+from database import Database
 from handlers.dashboard_handler import DashboardHandler
 from utils import decrypt_credentials
 from dialogs.register import Register
@@ -11,6 +11,7 @@ class Login(tk.Frame):
         self.root: tk.Tk = root
         self.parent: tk.Frame = parent
         self.root.wm_state("normal") #! zoomed is windows only other options - normal, icon, iconic, withdrawn
+        self.db = Database()
 
         tk.Label(self, text="JK Password Manager", font=("arial", 45, "bold"), foreground="white", background="#3d3d5c").pack(pady=25)
         tk.Label(self, height=4, bg="#3d3d5c").pack()
@@ -54,7 +55,7 @@ class Login(tk.Frame):
         if not self.password.get():
             self.incorrect_password_label["text"] = "Invalid Password"            
 
-        response = login(self.username.get(), self.password.get())
+        response = self.db.login(self.username.get(), self.password.get())
         if not response:
             self.incorrect_password_label["text"] = "Incorrect Username and Password"
             return
@@ -67,5 +68,5 @@ class Login(tk.Frame):
         self.username.set("")
         self.password.set("")
 
-        DashboardHandler(self.parent, self.root, user_id, username, data, f)
+        DashboardHandler(self.parent, self.root, user_id, username, data, self.db)
         self.destroy()

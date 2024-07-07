@@ -1,7 +1,7 @@
 import tkinter as tk
 import tkinter.messagebox as msg
 import os
-from app_database import sign_up
+from database import Database
 
 class Register:
     def __init__(self, root):
@@ -68,7 +68,7 @@ class Register:
             self.incorrect_info_label["text"] = "This password is too short, minimum is 6."
             return
         
-        if not sign_up(self.new_username.get(), self.new_password.get()):
+        if not Database().register(self.new_username.get(), self.new_password.get()):
             self.incorrect_info_label["text"] = "This username already exist."
             return
         

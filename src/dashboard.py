@@ -2,11 +2,7 @@ import tkinter as tk
 import time
 from tkinter import ttk, filedialog
 import pyperclip
-from app_database import insert
-from app_database import update
-from app_database import delete
-from app_database import delete_user_data
-from app_database import get_password
+from database import Database
 from dialogs.generator import PasswordGenerator
 import tkinter.messagebox as msg
 from handlers import login_handler
@@ -15,14 +11,14 @@ import os
 
 
 class Dashboard(tk.Frame):
-    def __init__(self, parent, root, user_id, user_name, data, f):
+    def __init__(self, parent, root, user_id, user_name, data, db):
         tk.Frame.__init__(self, parent, bg="#3d3d5c")
         self.root = root
         self.parent = parent
         self.user_id = user_id
         self.user_name = user_name
         self.data = data
-        self.f = f
+        self.db: Database = db
 
         heading_frame = tk.Frame(self, bg="#33334d")
         tk.Label(heading_frame, text="User Name : ", font=("arial", 13), fg="white", bg="#33334d").pack(padx=10, side="left")
@@ -147,20 +143,6 @@ class Dashboard(tk.Frame):
         self.cp_menu.delete(0, tk.END)
         self.cp_menu.add_command(label="Copy", command=copy)
         self.cp_menu.post(event.x_root, event.y_root)
-        
-
-    def copy(self, column, item):
-        if column == "#0": 
-            text = self.data_tree.item(item, "text")
-            name = "Platform"
-        elif column == "#4":
-            msg.showerror("Error", 'Please use "Copy Password" button in order to copy password!'); return
-        else: 
-            text = self.data_tree.set(item, column)
-            name = self.data_tree.heading(column)["text"]
-
-        pyperclip.copy(text)
-        msg.showinfo("Info", f"{name} copied to clipboard!")
 
 
     def deselect(self, event: tk.Event):
@@ -170,7 +152,7 @@ class Dashboard(tk.Frame):
 
     def update_row(self, row_id, platform, username, password, time_stamp=time.strftime("%I:%M %p %d-%m-%Y")):
         row = [platform, username, password, time_stamp, self.user_id, row_id]
-        update(row, self.f)
+        self.db.update(row)
         serial_number = self.data_tree.item(row_id, "values")[0]
         display_password = "*" * len(password)
         self.data_tree.item(row_id, text="", values=(serial_number, platform, username, display_password, time_stamp))
@@ -178,7 +160,7 @@ class Dashboard(tk.Frame):
 
     def insert_row(self, platform, username, password, time_stamp=time.strftime("%I:%M %p %d-%m-%Y")):
         row = [platform, username, password, time_stamp, self.user_id]
-        new_id = insert(row, self.f)
+        new_id = self.db.insert(row)
         display_password = "*" * len(password)
         self.count += 1
         self.data_tree.insert(parent="", index="end", iid=new_id, text="", values=(self.count, platform, username, display_password, time_stamp))
@@ -214,7 +196,7 @@ class Dashboard(tk.Frame):
             return
         
         rows = self.data_tree.selection()
-        delete(rows)
+        self.db.delete(rows)
 
         if len(rows) == 1:
             self.data_tree.delete(rows)
@@ -232,7 +214,7 @@ class Dashboard(tk.Frame):
             msg.showerror("ERROR", "Please select one above!")
             return
 
-        selected_password = get_password(self.data_tree.focus(), self.user_id, self.f)
+        selected_password = self.db.get_password(self.data_tree.focus(), self.user_id)
         pyperclip.copy(selected_password)
         msg.showinfo("Info", "Password copied.")
 
@@ -242,7 +224,7 @@ class Dashboard(tk.Frame):
             msg.showerror("ERROR", "Please select one above!")
             return
 
-        selected_password = get_password(self.data_tree.focus(), self.user_id, self.f)
+        selected_password = self.db.get_password(self.data_tree.focus(), self.user_id)
         selected_row_data = self.data_tree.item(self.data_tree.focus(), "values")
         msg.showinfo("Login Credentials", f'Your password for "{selected_row_data[1]}" is "{selected_password}" and username is "{selected_row_data[2]}".')
 
@@ -252,7 +234,7 @@ class Dashboard(tk.Frame):
         if not decision:
             return
         
-        delete_user_data(self.user_id)
+        self.db.delete_user_data(self.user_id)
         for x in self.data_tree.get_children():
             self.data_tree.delete(x)
 
@@ -265,7 +247,7 @@ class Dashboard(tk.Frame):
 
         for id in self.data_tree.get_children():
             values = self.data_tree.item(id, "values")
-            password = get_password(id, self.user_id, self.f)
+            password = self.db.deleteget_password(id, self.user_id)
             row = (values[1], values[2], password, values[4])
             data.append(row)
 

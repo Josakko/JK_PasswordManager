@@ -15,7 +15,7 @@ class Database:
         cursor.close()
 
 
-    def sign_up(self, new_username, new_password):
+    def register(self, new_username, new_password):
         username = hash(new_username, new_username)
 
         cursor = self.db.cursor()
@@ -35,30 +35,30 @@ class Database:
 
     def login(self, username, password):
         cursor = self.db.cursor()
-
+        
         username_hash = hash(username, username)
         password_key = generate_key_with_password(password, username_hash)
         password_f = Fernet(password_key)
 
-        
-        user = cursor.execute("SELECT * FROM users WHERE user_name = ?", (username_hash)).fetchall()
+        user = cursor.execute("SELECT * FROM users WHERE user_name = ?", (username_hash,)).fetchone()
 
         if not user:
-            return None
+            return False
         
         try: key = decrypt(user[2], password_f)
         except: return False
         
         data = cursor.execute("SELECT * FROM users_data WHERE user_id = ?", (user[0], )).fetchall()
         cursor.close()
-        
-        return [user[0], username, data, Fernet(key)]
+
+        self.f = Fernet(key)
+        return [user[0], username, data, self.f]
 
 
-    def insert(self, data: list, f):
-        platform = encrypt(data[0], f)
-        username = encrypt(data[1], f)
-        password = encrypt(data[2], f)
+    def insert(self, data: list):
+        platform = encrypt(data[0], self.f)
+        username = encrypt(data[1], self.f)
+        password = encrypt(data[2], self.f)
         data.pop(0)
         data.insert(0, platform)
         data.pop(1)
@@ -67,7 +67,7 @@ class Database:
         data.insert(2, password)
 
         cursor = self.db.cursor()
-        cursor.execute("INSERT INTO user_data(platform, user_name, password, time, user_id) VALUES (?, ?, ?, ?, ?)", data)
+        cursor.execute("INSERT INTO users_data(platform, user_name, password, time, user_id) VALUES (?, ?, ?, ?, ?)", data)
         last_row_id = cursor.lastrowid
 
         self.db.commit()
@@ -75,10 +75,10 @@ class Database:
         return last_row_id # self.db.execute("SELECT last_insert_rowid()").fetchone()[0]
 
 
-    def update(self, data, f):
-        platform = encrypt(data[0], f)
-        username = encrypt(data[1], f)
-        password = encrypt(data[2], f)
+    def update(self, data):
+        platform = encrypt(data[0], self.f)
+        username = encrypt(data[1], self.f)
+        password = encrypt(data[2], self.f)
         data.pop(0)
         data.insert(0, platform)
         data.pop(1)
@@ -114,10 +114,10 @@ class Database:
         cursor.close()
 
 
-    def get_password(self, row_id, user_id, f):
+    def get_password(self, row_id, user_id):
         cursor = self.db.cursor()
         password = cursor.execute("SELECT password FROM users_data WHERE id = ? AND user_id = ?", (row_id, user_id)).fetchone()[0]
 
         cursor.close()
-        return decrypt(password, f)
+        return decrypt(password, self.f)
 

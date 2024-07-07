@@ -1,79 +1,20 @@
 import sqlite3
 from cryptography.fernet import Fernet
-from cryptography.hazmat.primitives import hashes
-from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
-import base64
-import hashlib
-
-
-
-def hash(string: str, salt: str) -> str:
-    data = string.encode() + salt.encode()
-
-    algorithm = hashlib.sha512()
-    algorithm.update(data)
-    return algorithm.hexdigest()
-
-
-def generate_key(password: str, username: str) -> str:
-    salt = base64.urlsafe_b64encode(f"{password}{username}".encode())
-
-    kdf = PBKDF2HMAC(
-        algorithm=hashes.SHA256(),
-        iterations=100000,
-        salt=salt,
-        length=32
-    )
-
-    return base64.urlsafe_b64encode(kdf.derive(password.encode()))
-
-
-def encrypt(string: str, f: object=None, key: str=None):
-    if f: 
-        return f.encrypt(string.encode()).decode()
-    elif key: 
-        return Fernet(key).encrypt(string.encode()).decode()
-    else: 
-        raise Exception("Key or Fernet instance is required")
-
-    
-def decrypt(string: str, f: object=None, key: str=None):
-    if f: 
-        return f.decrypt(string.encode()).decode()
-    elif key: 
-        return Fernet(key).decrypt(string.encode()).decode()
-    else: 
-        raise Exception("Key or Fernet instance is required")
-
+from utils import *
 
 
 def database():
-    conn = sqlite3.connect("password_vault.db")
+    conn = sqlite3.connect(DB_FILE)
     cursor = conn.cursor()
 
-    cursor.execute("""CREATE TABLE IF NOT EXISTS users(
-                    user_id varchar PRIMARY KEY,
-                    user_name text,  
-                    password text
-                    )""")
-
-                    
-    cursor.execute("""CREATE TABLE IF NOT EXISTS users_data(
-                    id INTEGER PRIMARY KEY,
-                    platform text,
-                    user_name text,  
-                    password text,
-                    time text,
-                    user_id varchar,
-                    FOREIGN KEY (user_id) REFERENCES supplier_groups (user_id) 
-                    )""")
+    cursor.executescript(SCHEMA)
 
     conn.commit()
     conn.close()
 
 
 def sign_up(new_username, new_password):
-    conn = sqlite3.connect("password_vault.db")
+    conn = sqlite3.connect(DB_FILE)
 
     username = hash(new_username, new_username)
 
@@ -101,7 +42,7 @@ def sign_up(new_username, new_password):
                     char = 65
             new_user_id = chr(char) + str(number)
 
-        key = encrypt(Fernet.generate_key().decode(), f=Fernet(generate_key(new_password, username)))
+        key = encrypt_key(Fernet.generate_key().decode(), generate_key_with_password(new_password, username))
 
         data = [new_user_id, username, key]
         sql = """INSERT INTO users(user_id, user_name, password)
@@ -118,10 +59,10 @@ def sign_up(new_username, new_password):
 def login(username, password):
     username_hash = hash(username, username)
 
-    password_key = generate_key(password, username_hash)
+    password_key = generate_key_with_password(password, username_hash)
     password_f = Fernet(password_key)
     
-    conn = sqlite3.connect("password_vault.db")
+    conn = sqlite3.connect(DB_FILE)
     cursor = conn.cursor()
 
     cursor.execute("SELECT * FROM users")
@@ -131,7 +72,7 @@ def login(username, password):
         return 0
     
     for row in rows:
-        try: key = decrypt(row[2], f=password_f)
+        try: key = decrypt(row[2], password_f)
         except: continue
         
         user_id = row[0]
@@ -157,7 +98,7 @@ def insert(data, f):
     data.pop(2)
     data.insert(2, password)
     
-    conn = sqlite3.connect("password_vault.db")
+    conn = sqlite3.connect(DB_FILE)
     
     cursor = conn.cursor()
     sql = """INSERT INTO users_data(platform,user_name,password,time,user_id)
@@ -182,7 +123,7 @@ def update(data, f):
     data.pop(2)
     data.insert(2, password)
     
-    conn = sqlite3.connect("password_vault.db")
+    conn = sqlite3.connect(DB_FILE)
 
     cursor = conn.cursor()
     sql = "UPDATE users_data SET platform=?,user_name=?,password=?,time=?,user_id=? WHERE id=?"
@@ -194,7 +135,7 @@ def update(data, f):
 
 
 def delete(row_id):
-    conn = sqlite3.connect("password_vault.db")
+    conn = sqlite3.connect(DB_FILE)
 
     cursor = conn.cursor()
     sql = "DELETE FROM users_data WHERE id IN ({})".format(", ".join("?" * len(row_id)))
@@ -206,7 +147,7 @@ def delete(row_id):
 
 
 def delete_user_data(user_id):
-    conn = sqlite3.connect("password_vault.db")
+    conn = sqlite3.connect(DB_FILE)
 
     cursor = conn.cursor()
     sql = "DELETE FROM users_data WHERE user_id=?"
@@ -218,7 +159,7 @@ def delete_user_data(user_id):
 
 
 def get_password(row_id, user_id, f):
-    conn = sqlite3.connect("password_vault.db")
+    conn = sqlite3.connect(DB_FILE)
 
     cursor = conn.cursor()
     sql = "SELECT password FROM users_data WHERE id = ? AND user_id = ?"
@@ -228,4 +169,4 @@ def get_password(row_id, user_id, f):
 
     conn.close()
     
-    return decrypt(requested_password, f=f)
+    return decrypt(requested_password, f)

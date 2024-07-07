@@ -2,13 +2,13 @@ import tkinter as tk
 from handlers.login_handler import LoginHandler
 from app_database import database as db_init
 from PIL import ImageTk, Image
-import requests
+import utils
 import webbrowser
 import os, sys
 from tkinter import messagebox
 import shutil
 import time
-#from generator import PasswordGenerator
+from gui.bottom_bar import bottom_bar
 
 #LANCZOS = 1
 
@@ -16,57 +16,25 @@ import time
 VERSION = "v6.10.1"
 #!######### VERSION #########!#
 
-
-def check_version(version):
-    url = "https://api.github.com/repos/Josakko/JK_PasswordManager/releases/latest"
-    try: res = requests.get(url)
-    except: return False, None
-    
-    if res.status_code == 200:
-        res = res.json()
-        latest_ver = res["tag_name"]
-        if latest_ver != version:
-            return res["html_url"], latest_ver
-        else:
-            return False, None
-    else:
-        return False, None
-    
-
-class JK_Password_Manager:
-    def __init__(self, root: tk.Tk):
-        self.root = root
-        self.root.minsize(750, 600)
-        self.root.title("JK PasswordManager")
-        #self.root.protocol("WM_DELETE_WINDOW", self.quit)
-        
-        #self.root.iconbitmap(os.path.join("assets", "JK.ico"))
-
-        icon = tk.PhotoImage(file=os.path.join("assets", "icon.png"))
-        self.root.iconphoto(True, icon)
-
-        container = tk.Frame(self.root)
-        container.pack(side="top", fill="both", expand=True)
-        container.grid_rowconfigure(0, weight=1)
-        container.grid_columnconfigure(0, weight=1)
-
-        LoginHandler(parent=container, root=self.root)
-        db_init()
-    
-    
-    #def quit(self):
-    #    try: os.mkdir("backups")
-    #    except: pass
-    #    shutil.copy("password_vault.db", os.path.join("backups", f"backup-{time.time()}-password_vault.db"))
-    #    self.root.destroy()
-
-    
 def app_window():
     root = tk.Tk()
-    app = JK_Password_Manager(root)
+    root.minsize(750, 600)
+    root.title("JK PasswordManager")
+
+    icon = tk.PhotoImage(file=os.path.join("assets", "icon.png"))
+    root.iconphoto(True, icon)
+
+    container = tk.Frame(root)
+    container.pack(side="top", fill="both", expand=True)
+    container.grid_rowconfigure(0, weight=1)
+    container.grid_columnconfigure(0, weight=1)
+
+    bottom_bar(root)
+
+    LoginHandler(parent=container, root=root)
+    db_init()
+
     root.mainloop()
-
-
 
 def main():
     splash = tk.Tk()
@@ -91,7 +59,7 @@ def main():
     splash.iconphoto(True, icon)
 
     
-    latest_version = check_version(VERSION)
+    latest_version = utils.check_version(VERSION)
     if latest_version[0]:
         choice = messagebox.askyesno("Update", f"Looks like new version is available, do you want to update now?\nYour current version is {VERSION} and latest release is {latest_version[1]}.")
         if choice:
@@ -103,7 +71,7 @@ def main():
 
     def resizer(event):
         global splash_img, resize_image, new_bg
-        splash_img = Image.open(os.path.join("assets", "loading.png")) #os.path.join("assets", "loading.png")
+        splash_img = Image.open(os.path.join("assets", "loading.png"))
         resize_image = splash_img.resize((event.width, event.height), Image.LANCZOS)
         new_bg = ImageTk.PhotoImage(resize_image)
         canvas.create_image(0, 0, image=new_bg, anchor="nw")
@@ -119,9 +87,9 @@ def main():
 if __name__ == "__main__":
     try:
         main()
-    except:
-    #except Exception as e:
-    #    print(e)
+    #except:
+    except Exception as e:
+        print(e)
         pass
 
     try: os.mkdir("backups")
@@ -131,3 +99,8 @@ if __name__ == "__main__":
 
     sys.exit()
 
+# TODO
+# organize stuff
+# add new selection when enter is pressed on register and login
+# add better version checking
+# TODO

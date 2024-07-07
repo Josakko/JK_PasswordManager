@@ -9,7 +9,7 @@ import os
 
 class PasswordGenerator:
     def __init__(self, root):
-        self.generator = tk.Toplevel(root)
+        self.generator = Toplevel(root)
 
         generator_width = 400
         generator_hight = 500
@@ -22,13 +22,13 @@ class PasswordGenerator:
 
         self.generator.geometry(f"{generator_width}x{generator_hight}+{int(x)}+{int(y)}")
         self.generator.title("JK PasswordGenerator")
-        #self.generator.iconbitmap("assets\JK.ico")
+
         icon_image = tk.PhotoImage(file=os.path.join("assets", "icon.png"))
         self.generator.iconphoto(True, icon_image)
         self.generator.resizable(False, False)
         
         self.generator.focus_force()
-        self.generator.grab_set()
+        # self.generator.grab_set()
 
         font = ("Arial", 12)
 
@@ -71,7 +71,9 @@ class PasswordGenerator:
 
         self.get_password()
 
+        # threading.Thread(target=self.generator.mainloop, daemon=True).start()
         self.generator.mainloop()
+
 
     def generate(self, length, letters, digits, symbols):
         chars = ""
@@ -109,6 +111,3 @@ class PasswordGenerator:
         copy(self.password_entry.get())
         messagebox.showinfo("Info", "Password copied successfully!")
 
-
-#PG = PasswordGenerator()
-#PG.run()

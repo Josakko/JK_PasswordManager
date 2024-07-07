@@ -28,7 +28,7 @@ def generate_key(password: str, username: str) -> str:
     return base64.urlsafe_b64encode(kdf.derive(password.encode()))
 
 
-def encrypt(string: str, f: object=None, key: str=None) -> (str, Exception):
+def encrypt(string: str, f: object=None, key: str=None):
     if f: 
         return f.encrypt(string.encode()).decode()
     elif key: 
@@ -37,7 +37,7 @@ def encrypt(string: str, f: object=None, key: str=None) -> (str, Exception):
         raise Exception("Key or Fernet instance is required")
 
     
-def decrypt(string: str, f: object=None, key: str=None) -> (str, Exception):
+def decrypt(string: str, f: object=None, key: str=None):
     if f: 
         return f.decrypt(string.encode()).decode()
     elif key: 

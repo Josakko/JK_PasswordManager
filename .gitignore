@@ -128,8 +128,11 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
+# db backup dir
+src/backups
 
-
+test.py
+*.db
 
 # FILES
 ./packaging/linux/JK_PasswordManager/usr/share/JK_PasswordManager/JK_PasswordManager

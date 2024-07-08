@@ -88,6 +88,3 @@ if __name__ == "__main__":
 
     sys.exit()
 
-# TODO
-# add better version checking
-# TODO

@@ -19,9 +19,10 @@ class Login(tk.Frame):
 
         self.username = tk.StringVar()
         self.password = tk.StringVar()
-        username_entry_box = tk.Entry(self, textvariable=self.username, font=("arial", 12), width=22)
-        username_entry_box.focus_set()
-        username_entry_box.pack(ipady=7)
+
+        self.username_entry_box = tk.Entry(self, textvariable=self.username, font=("arial", 12), width=22)
+        self.username_entry_box.focus_set()
+        self.username_entry_box.pack(ipady=7)
 
         tk.Label(self, text="Enter your password", font=("arial", 13), fg="white", bg="#3d3d5c").pack(pady=10)
 
@@ -29,9 +30,11 @@ class Login(tk.Frame):
         self.password_entry_box.pack(ipady=7)
 
         self.password_entry_box.bind("<FocusIn>", self.handle_focus_in)
+        self.password_entry_box.bind("<Return>", self.on_enter_press)
+        self.username_entry_box.bind("<Return>", self.on_enter_press)
 
-        enter_button = tk.Button(self, text="Login", font=("arial", 13), command=self.check_password, relief="raised", borderwidth=3, height=2, width=15)
-        enter_button.pack(pady=20)
+        self.enter_button = tk.Button(self, text="Login", font=("arial", 13), command=self.check_password, relief="raised", borderwidth=3, height=2, width=15)
+        self.enter_button.pack(pady=20)
 
         control_frame = tk.Frame(self, relief="raised", bg="#33334d")
         control_frame.pack(fill="both", expand=True)
@@ -42,6 +45,18 @@ class Login(tk.Frame):
         sign_up_btn = tk.Button(control_frame, text="Sign Up", command=lambda: Register(self), relief="raised", bg="#3d3d5c", font=("arial", 13), fg="white")
         sign_up_btn.pack(pady=5)
 
+
+    def on_enter_press(self, event: tk.Event):
+        if self.username.get() != "":
+            if self.password.get() != "":
+                self.enter_button.invoke()
+
+            else:
+                self.password_entry_box.focus()
+
+        elif self.password.get() != "":
+            self.username_entry_box.focus()
+            
 
     def handle_focus_in(self, _):
         self.password_entry_box.configure(fg="black", show="*")
@@ -57,6 +72,7 @@ class Login(tk.Frame):
 
         response = self.db.login(self.username.get(), self.password.get())
         if not response:
+            self.password.set("")
             self.incorrect_password_label["text"] = "Incorrect Username and Password"
             return
         

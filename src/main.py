@@ -100,7 +100,5 @@ if __name__ == "__main__":
     sys.exit()
 
 # TODO
-# organize stuff
-# add new selection when enter is pressed on register and login
 # add better version checking
 # TODO

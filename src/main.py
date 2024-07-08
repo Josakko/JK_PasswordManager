@@ -2,19 +2,14 @@ import tkinter as tk
 from handlers.login_handler import LoginHandler
 from database import Database
 from PIL import ImageTk, Image
-import utils
-import webbrowser
 import os, sys
-from tkinter import messagebox
 import shutil
 import time
 from gui.bottom_bar import bottom_bar
+from updater import update
 
 #LANCZOS = 1
 
-#!######### VERSION #########!#
-VERSION = "v6.10.1"
-#!######### VERSION #########!#
 
 def app_window():
     root = tk.Tk()
@@ -58,13 +53,7 @@ def main():
     icon = tk.PhotoImage(file=os.path.join("assets", "icon.png"))
     splash.iconphoto(True, icon)
 
-    
-    latest_version = utils.check_version(VERSION)
-    if latest_version[0]:
-        choice = messagebox.askyesno("Update", f"Looks like new version is available, do you want to update now?\nYour current version is {VERSION} and latest release is {latest_version[1]}.")
-        if choice:
-            webbrowser.open_new(latest_version[0])
-
+    update()
 
     splash.deiconify()
 

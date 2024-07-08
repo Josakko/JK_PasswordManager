@@ -3,7 +3,16 @@ from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 import base64
 import hashlib
-import requests
+
+#!######### VERSION #########!#
+VERSION = "v6.10.0"
+#!######### VERSION #########!#
+
+
+PROTOCOL = "https://"
+GITHUB_API_DOMAIN = "api.github.com/"
+GITHUB_REPO = "Josakko/JK_PasswordManager/"
+GITHUB_RELEASE_API = PROTOCOL + GITHUB_API_DOMAIN + "repos/" + GITHUB_REPO + "releases/latest"
 
 DB_FILE = "password_vault.db"
 
@@ -89,18 +98,25 @@ def decrypt_credentials(encrypted_data, f):
     return data
 
 
-def check_version(version):
-    url = "https://api.github.com/repos/Josakko/JK_PasswordManager/releases/latest"
-    try: res = requests.get(url)
-    except: return False, None
-    
-    if res.status_code == 200:
-        res = res.json()
-        latest_ver = res["tag_name"]
-        if latest_ver != version:
-            return res["html_url"], latest_ver
-        else:
-            return False, None
-    else:
-        return False, None
+# major.minor.revision.stream (optional)
+def parse_version(version: str):
+    segments = version.strip("v").split(".", 4)
+
+    tmp = []
+    for i in segments:
+        try:
+            tmp.append(int(i))
+        except ValueError:
+            tmp.append(i)
+
+    segments = tmp
+
+    if len(segments) < 3:
+        while len(segments) != 3:
+            segments.append(0)
+
+    if len(segments) == 3:
+        segments.append("Release")
+
+    return segments
 

@@ -78,9 +78,12 @@ class Dashboard(tk.Frame):
         self.add_update_password = tk.Entry(button_frame1, textvariable="add_update_password", font=13)
         self.add_update_password.grid(row=1, column=2)
 
+        self.add_update_platform.bind("<Return>", self.on_enter_press)
+        self.add_update_username.bind("<Return>", self.on_enter_press)
+        self.add_update_password.bind("<Return>", self.on_enter_press)
 
-        add_button = tk.Button(button_frame1, command=self.add_update_row, text="Add / Update", width=20, relief="raised")
-        add_button.grid(row=1, column=3, padx=20)
+        self.add_button = tk.Button(button_frame1, command=self.add_update_row, text="Add / Update", width=20, relief="raised")
+        self.add_button.grid(row=1, column=3, padx=20)
 
         button_frame = tk.Frame(self, relief="raised", bg="#33334d")
         button_frame.pack(fill="x", pady=30)
@@ -247,7 +250,7 @@ class Dashboard(tk.Frame):
 
         for id in self.data_tree.get_children():
             values = self.data_tree.item(id, "values")
-            password = self.db.deleteget_password(id, self.user_id)
+            password = self.db.get_password(id, self.user_id)
             row = (values[1], values[2], password, values[4])
             data.append(row)
 
@@ -300,3 +303,14 @@ class Dashboard(tk.Frame):
         
         self.read(file)
 
+
+    def on_enter_press(self, event: tk.Event):
+        focus_widget = self.focus_get()
+        if focus_widget == self.add_update_platform:
+            self.add_update_username.focus_set()
+        
+        elif focus_widget == self.add_update_username:
+            self.add_update_password.focus_set()
+        
+        elif focus_widget == self.add_update_password:
+            self.add_button.invoke()

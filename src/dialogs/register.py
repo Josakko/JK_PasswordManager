@@ -45,14 +45,35 @@ class Register:
         self.confirm_password_entry_box = tk.Entry(self.reg, textvariable=self.confirm_password, font=("arial", 12), width=22)
         self.confirm_password_entry_box.pack(ipady=7)
 
-        self.new_password_entry_box.bind("<FocusIn>", self.seconnd_handle_focus_in)
-        self.confirm_password_entry_box.bind("<FocusIn>", self.seconnd_handle_focus_in)
+        self.new_password_entry_box.bind("<FocusIn>", self.handle_focus_in)
+        self.confirm_password_entry_box.bind("<FocusIn>", self.handle_focus_in)
+
+        self.new_username_entry_box.bind("<Return>", self.on_enter_press)
+        self.new_password_entry_box.bind("<Return>", self.on_enter_press)
+        self.confirm_password_entry_box.bind("<Return>", self.on_enter_press)
 
         self.register_button = tk.Button(self.reg, text="Register", font=("arial", 13), relief="raised", command=self.register, borderwidth=3, height=2, width=15)
         self.register_button.pack(pady=20)
 
         self.incorrect_info_label = tk.Label(self.reg, text="", font=("arial", 13), fg="#ff0000", bg="#3d3d5c", anchor="n")
         self.incorrect_info_label.pack(pady=10)
+
+
+    def on_enter_press(self, event: tk.Event):
+        if self.new_username.get() != "":
+            if self.new_password.get() != "":
+                if self.confirm_password.get() != "":
+                    self.register_button.invoke()
+                else:
+                    self.confirm_password_entry_box.focus_set()
+            else:
+                self.new_password_entry_box.focus_set()
+
+        elif self.new_password.get() != "":
+            self.new_username_entry_box.focus_set()
+
+        elif self.confirm_password.get() != "":
+            self.new_username_entry_box.focus_set()
 
 
     def register(self):
@@ -77,7 +98,7 @@ class Register:
         msg.showwarning("Warning", "Make sure to save this master password since if lost all credentials saved on this account are permanently lost and cant be recovered without original password!")
 
 
-    def seconnd_handle_focus_in(self, _):
+    def handle_focus_in(self, _):
         self.new_password_entry_box.configure(fg="black", show="*")
         self.confirm_password_entry_box.configure(fg="black", show="*")
 

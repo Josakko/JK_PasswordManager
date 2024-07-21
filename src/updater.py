@@ -53,14 +53,17 @@ def download_files(release):
         to_get = "linux"
 
     url = ""
+    filename = ""
     for asset in release["assets"]:
         if "executable" in asset["name"] and to_get in asset["name"]:
             url = asset["browser_download_url"]
+            filename = asset["name"]
+            break
 
-    if url == "":
-        ...
+    if url == "" or filename == "":
+        return False
 
-    download_filepath = os.path.join(os.path.dirname(curr_file), asset["name"])
+    download_filepath = os.path.join(os.path.dirname(curr_file), filename)
     try:
         fb = requests.get(url).content
     except:

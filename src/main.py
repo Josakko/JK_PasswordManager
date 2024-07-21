@@ -66,8 +66,6 @@ def main():
     icon = tk.PhotoImage(file=os.path.join("assets", "icon.png"))
     splash.iconphoto(True, icon)
 
-    update()
-
     splash.deiconify()
 
 

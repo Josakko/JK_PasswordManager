@@ -35,15 +35,8 @@ def app_window():
     root.mainloop()
 
 def main():
-    if "--updated" in sys.argv:
-        updater.post_update()
-        messagebox.showinfo("Update", f"Updated successfully to new version! New version: {utils.VERSION}")
+    disable_update = True if "--no-update" in sys.argv else False
 
-    elif "--do-update" in sys.argv and len(sys.argv) >= 4:
-        update.main(sys.argv)
-
-    else:
-        updater.update()
 
     splash = tk.Tk()
     splash.withdraw()
@@ -66,6 +59,16 @@ def main():
     icon = tk.PhotoImage(file=os.path.join("assets", "icon.png"))
     splash.iconphoto(True, icon)
 
+    if "--updated" in sys.argv:
+        updater.post_update()
+        messagebox.showinfo("Update", f"Updated successfully to new version! New version: {utils.VERSION}")
+
+    elif "--do-update" in sys.argv and len(sys.argv) >= 4:
+        update.main(sys.argv)
+
+    else:
+        updater.update(disable_update)
+
     splash.deiconify()
 
 
@@ -75,7 +78,6 @@ def main():
         resize_image = splash_img.resize((event.width, event.height), Image.LANCZOS)
         new_bg = ImageTk.PhotoImage(resize_image)
         canvas.create_image(0, 0, image=new_bg, anchor="nw")
-
 
     splash.bind("<Configure>", resizer)
     splash.after(3000, splash.destroy)
@@ -100,7 +102,6 @@ if __name__ == "__main__":
     sys.exit()
 
 # TODO
-# argument for disabling auto updater
 # popup for manual update if automatic fails
 # verification for update success
 # TODO

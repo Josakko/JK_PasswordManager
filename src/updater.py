@@ -1,7 +1,7 @@
 from utils import parse_version, VERSION, GITHUB_RELEASE_API
 import requests
-# from tkinter import messagebox
-# import webbrowser
+from tkinter import messagebox
+import webbrowser
 import os
 import sys
 import subprocess
@@ -88,19 +88,20 @@ def run_update(update_filename, current_filename):
     sys.exit(0)
 
 
-def update():
+def update(disable_update):
     release = get_latest_version()
     if not check_update(release):
         return
 
-    download_files(release)
+    if disable_update:
+        ret = messagebox.askyesno("Update", f"There is an update available, do you want to update now?\n Your current version is {VERSION} and the latest one is {release['tag_name']}.")
+        if not ret:
+            return
 
-    # # should be temporary only
-    # ret = messagebox.askyesno("Update", f"There is an update available, do you want to update now?\n Your current version is {VERSION} and the latest one is {release['tag_name']}.")
-    # if not ret:
-    #     return
-    # 
-    # webbrowser.open(release["html_url"])
+        webbrowser.open(release["html_url"])        
+        return
+
+    download_files(release)
 
 
 def post_update():

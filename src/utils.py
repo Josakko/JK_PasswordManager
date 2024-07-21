@@ -3,6 +3,7 @@ from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 import base64
 import hashlib
+import os
 
 #!######### VERSION #########!#
 VERSION = "v6.10.0"
@@ -123,4 +124,17 @@ def parse_version(version: str):
         segments.append("Release")
 
     return segments
+
+
+def copyfile(target_filename, new_filename):
+    if not os.path.isfile(target_filename):
+        return None
+
+    try:
+        target = open(target_filename, "rb").read()
+        open(new_filename, "wb").write(target)
+        return True
+    except:
+        return False
+    
 

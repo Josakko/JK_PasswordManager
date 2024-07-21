@@ -6,7 +6,10 @@ import os, sys
 import shutil
 import time
 from gui.bottom_bar import bottom_bar
-from updater import update
+import updater
+import update
+from tkinter import messagebox
+import utils
 
 #LANCZOS = 1
 
@@ -32,6 +35,16 @@ def app_window():
     root.mainloop()
 
 def main():
+    if "--updated" in sys.argv:
+        updater.post_update()
+        messagebox.showinfo("Update", f"Updated successfully to new version! New version: {utils.VERSION}")
+
+    elif "--do-update" in sys.argv and len(sys.argv) >= 4:
+        update.main(sys.argv)
+
+    else:
+        updater.update()
+
     splash = tk.Tk()
     splash.withdraw()
 
@@ -88,3 +101,8 @@ if __name__ == "__main__":
 
     sys.exit()
 
+# TODO
+# argument for disabling auto updater
+# popup for manual update if automatic fails
+# verification for update success
+# TODO

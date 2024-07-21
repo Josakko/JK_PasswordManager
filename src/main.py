@@ -59,15 +59,14 @@ def main():
     icon = tk.PhotoImage(file=os.path.join("assets", "icon.png"))
     splash.iconphoto(True, icon)
 
-    if "--updated" in sys.argv:
+    if "--updated" in sys.argv and len(sys.argv) >= 3:
         updater.post_update()
         messagebox.showinfo("Update", f"Updated successfully to new version! New version: {utils.VERSION}")
 
     elif "--do-update" in sys.argv and len(sys.argv) >= 4:
         update.main(sys.argv)
 
-    else:
-        updater.update(disable_update)
+    updater.update(disable_update)
 
     splash.deiconify()
 
@@ -89,9 +88,9 @@ def main():
 if __name__ == "__main__":
     try:
         main()
-    #except:
-    except Exception as e:
-        print(e)
+    except:
+    # except Exception as e:
+    #    print(e)
         pass
 
     try: os.mkdir("backups")
@@ -101,7 +100,4 @@ if __name__ == "__main__":
 
     sys.exit()
 
-# TODO
-# popup for manual update if automatic fails
-# verification for update success
-# TODO
+

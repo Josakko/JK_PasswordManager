@@ -71,19 +71,23 @@ def download_files(release):
 
     open(download_filepath, "wb").write(fb)
 
-    run_update(download_filepath, curr_file)
+    return run_update(download_filepath, curr_file)
 
 
 def run_update(update_filename, current_filename):
     cmd = [update_filename, "--do-update", update_filename, current_filename] + sys.argv
 
     if sys.platform == "win32":
-        subprocess.Popen(cmd, creationflags=CREATE_NEW_PROCESS_GROUP, stderr=subprocess.DEVNULL, stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL)
+        try:
+            subprocess.Popen(cmd, creationflags=CREATE_NEW_PROCESS_GROUP, stderr=subprocess.DEVNULL, stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL)
+        except: return False
         # subprocess.CREATE_NO_WINDOW, subprocess.DETACHED_PROCESS, subprocess.CREATE_NEW_PROCESS_GROUP
     
     # elif sys.platform == "linux" or sys.platform == "linux2":
     else:
-        subprocess.Popen(cmd, start_new_session=True, stderr=subprocess.DEVNULL, stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL)
+        try:
+            subprocess.Popen(cmd, start_new_session=True, stderr=subprocess.DEVNULL, stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL)
+        except: return False
 
     sys.exit(0)
 
@@ -93,6 +97,7 @@ def update(disable_update):
     if not check_update(release):
         return
 
+
     if disable_update:
         ret = messagebox.askyesno("Update", f"There is an update available, do you want to update now?\n Your current version is {VERSION} and the latest one is {release['tag_name']}.")
         if not ret:
@@ -101,7 +106,12 @@ def update(disable_update):
         webbrowser.open(release["html_url"])        
         return
 
-    download_files(release)
+    if "--updated" in sys.argv or not download_files(release):
+        ret = messagebox.askyesno("Update", f"There is an update available however auto update has failed! Do you want to update now manually?\n Your current version is {VERSION} and the latest one is {release['tag_name']}.")
+        if not ret:
+            return
+
+        webbrowser.open(release["html_url"])
 
 
 def post_update():
@@ -109,8 +119,8 @@ def post_update():
         arg_index = sys.argv.index("--updated") + 1
     except: 
         return
-    
-    if len(sys.argv) < arg_index:
+
+    if len(sys.argv) < (arg_index + 1):
         return
         
     to_delete = sys.argv[arg_index]

@@ -98,7 +98,11 @@ def decrypt_credentials(encrypted_data, f):
     return data
 
 
-# major.minor.revision.stream (optional)
+def get_key_from_fernet(f: Fernet):
+    return base64.urlsafe_b64encode(f._signing_key + f._encryption_key).decode()
+
+
+# major.minor.revision.stream (optional, if not set defaults to Release)
 def parse_version(version: str):
     segments = version.strip("v").split(".", 4)
 

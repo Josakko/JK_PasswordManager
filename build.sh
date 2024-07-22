@@ -1,28 +1,37 @@
 #!/bin/bash
 
+set -e
 
-cd src/ || exit
 
-mkdir build/
-cd build/ || exit
-mkdir assets/
-cp ../assets/icon.png assets/icon.png
-cp ../assets/loading.png assets/loading.png
+PY="python3"
+PIP="pip3"
+
+if [[ $1 != "" ]]; then
+    PY="$1"
+fi
+
+if [[ $2 != "" ]]; then
+    PIP="$2"
+fi
+
+rm -rf ./src/build
+rm -rf ./src/venv
+
+cd src/
+mkdir build/assets/ -p
+cd build/
+cp ../assets/* ./assets/
 cd ..
 
-rm -rf venv
-python3 -m venv venv
+$PY -m venv venv
 source venv/bin/activate
 
-curl -o req.txt https://raw.githubusercontent.com/Josakko/JK_PasswordManager/main/requirements.txt
-pip3 install -r req.txt
-#pip3 install -r requirements.txt
+$PIP install -r ../requirements.txt
 
-python3 -m nuitka main.py --clang --disable-console --clean-cache=all --remove-output --output-dir=build --onefile --standalone --enable-plugins=tk-inter # --follow-imports
+$PY -m nuitka main.py --clang --clean-cache=all --remove-output --output-dir=build --onefile --standalone --enable-plugins=tk-inter # --follow-imports --disable-console
 
 deactivate
 rm -rf venv
-rm -rf req.txt
 
 mv build/main.bin build/JK_PasswordManager
 

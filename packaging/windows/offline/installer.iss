@@ -1,5 +1,5 @@
-#define Name "JK Password Manager"
-#define Version "6.6.1"
+#define Name "JK PasswordManager"
+#define Version "7.0.0"
 #define Publisher "Josakko"
 #define AppUrl "https://github.com/Josakko/JK_PasswordManager"
 #define Executable "JK_PasswordManager.exe"
@@ -37,8 +37,8 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "C:\Users\Korisnik\Documents\Programs\JK Password Manager\JK Password Manager\{#Executable}"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\Korisnik\Documents\Programs\JK Password Manager\JK Password Manager\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "..\..\..\src\build\{#Executable}"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\..\..\src\build\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]

@@ -2,6 +2,10 @@
 
 set -e
 
+if [[ $1 == "clean" ]]; then
+    rm -rf ./src/build
+    rm -rf ./src/venv
+fi
 
 PY="python3"
 PIP="pip3"

@@ -1,6 +1,6 @@
 import os
 import sys
-import utils
+import shutil
 import subprocess
 
 
@@ -13,9 +13,7 @@ def main(argv):
         launch(to_update_filename, temp_update_filename, other_args)
         sys.exit(0)
 
-    utils.copyfile(temp_update_filename, to_update_filename)
-    
-    # os.access()
+    shutil.copy(temp_update_filename, to_update_filename)
 
     launch(to_update_filename, temp_update_filename, other_args)
     sys.exit(0)

@@ -126,15 +126,3 @@ def parse_version(version: str):
     return segments
 
 
-def copyfile(target_filename, new_filename):
-    if not os.path.isfile(target_filename):
-        return None
-
-    try:
-        target = open(target_filename, "rb").read()
-        open(new_filename, "wb").write(target)
-        return True
-    except:
-        return False
-    
-

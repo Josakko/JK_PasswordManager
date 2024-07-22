@@ -18,20 +18,27 @@ def get_latest_version():
 
 
 def needs_update(current, new):
-    if new[0] <= current[0]:
-        if new[1] <= current[1]:        
-            if new[2] <= current[2]:
-                if new[3] == current[3]:
-                    if new[3] == "Release" and current[3] == "Beta":
-                        return True
-                    else:
-                        return False
-                else:
-                    return True
-        else:
-            return True
-    else: 
+    if new[0] < current[0]:
+        return False
+    elif new[0] > current[0]:
         return True
+    else:
+        if new[1] < current[1]:
+            return False
+        elif new[1] > current[1]:
+            return True
+        else:
+            if new[2] < current[2]:
+                return False
+            elif new[2] > current[2]:
+                return True
+            else:
+                if new[3] == current[3]:
+                    return False
+                elif new[3] == "Release" and current[3] == "Beta":
+                    return True
+                else:
+                    return False
 
 
 def check_update(release):

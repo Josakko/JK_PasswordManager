@@ -32,7 +32,7 @@ source venv/bin/activate
 
 $PIP install -r ../requirements.txt
 
-$PY -m nuitka main.py --clang --clean-cache=all --remove-output --output-dir=build --onefile --standalone --enable-plugins=tk-inter # --follow-imports --disable-console
+$PY -m nuitka main.py --clang --clean-cache=all --remove-output --output-dir=build --onefile --standalone --enable-plugins=tk-inter --prefer-source-code --linux-icon=assets/icon.png # --follow-imports --disable-console
 
 deactivate
 rm -rf venv

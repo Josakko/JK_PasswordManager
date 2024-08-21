@@ -136,7 +136,9 @@ test.py
 
 test
 
-out
+# out
+linux-out
+deb-out
 
 # FILES
 ./packaging/linux/JK_PasswordManager/usr/share/JK_PasswordManager/JK_PasswordManager

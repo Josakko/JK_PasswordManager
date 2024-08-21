@@ -1,7 +1,10 @@
 #!/bin/bash
 
-# ARCH=x86_64 appimagetool JK_PasswordManager.AppDir
+set -e
+cd ../../
+version="$(cat ./version)"
 
-cp ../src/build/JK_PasswordManager ./packaging/linux/JK_PasswordManager/usr/share/JK_PasswordManager
-dpkg --build ./linux/JK_PasswordManager
-mv ./linux/JK_PasswordManager.deb ../../bin/JK_PasswordManager.deb
+docker build -t jkpm/jkpm-linux-deb -f ./packaging/linux/Dockerfile .
+
+docker run --rm -i -v $PWD/out/deb-out:/work/out -w /work/out jkpm/jkpm-linux-deb dpkg-deb --build /work/jkpm /work/out/jkpm-$version.deb
+

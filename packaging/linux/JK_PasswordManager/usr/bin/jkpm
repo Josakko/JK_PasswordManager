@@ -1,0 +1,18 @@
+#!/bin/bash
+
+
+INSTDIR="$HOME/.local/share/"
+
+if [[ ! -d ${INSTDIR}/jkpm ]]; then
+    cp /usr/share/jkpm-inst $INSTDIR
+fi
+
+cd $INSTDIR/jkpm
+
+if [[ ! -f ${INSTDIR}/jkpm/jkpm ]]; then
+    rm -rf $INSTDIR/jkpm
+    cp /usr/share/jkpm-inst $INSTDIR
+fi
+
+exec jkpm "$@"
+

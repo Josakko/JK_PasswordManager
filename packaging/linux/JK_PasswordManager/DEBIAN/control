@@ -1,7 +1,8 @@
-Package: jk-password-manager
+Package: jkpm
 Version: 6.10
 Section: utils
 Priority: optional
 Architecture: amd64
 Maintainer: Josakko, josakko@protonmail.com
-Description: Secure password manager
+Description: JK_PasswordManager, Secure password manager
+Homepage: https://github.com/Josakko/JK_PasswordManager

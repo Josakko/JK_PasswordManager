@@ -1,0 +1,13 @@
+[Desktop Entry]
+Categories=Utils;
+Exec=jkpm
+Icon=jkpm
+Keywords=jk;password;manager;pm;
+MimeType=
+Name=JK_PasswordManager
+Comment=Secure password manager
+Path=
+StartupNotify=true
+Terminal=false
+TerminalOptions=
+Type=Application

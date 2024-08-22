@@ -1,31 +1,34 @@
-#define Name "JK PasswordManager"
+#define Name "JK_PasswordManager"
 #define Version "7.0.0"
 #define Publisher "Josakko"
 #define AppUrl "https://github.com/Josakko/JK_PasswordManager"
 #define Executable "JK_PasswordManager.exe"
 
 [Setup]
-; NOTE: The value of AppId uniquely identifies this application. Do not use the same AppId value in installers for other applications.
-; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
 AppId={{15F8CA47-4A96-4B97-B546-95A40F93C10B}
 AppName={#Name}
 AppVersion={#Version}
-;AppVerName={#Name} {#Version}
+AppVerName={#Name}-{#Version}
 AppPublisher={#Publisher}
 AppPublisherURL={#AppUrl}
 AppSupportURL={#AppUrl}
 AppUpdatesURL={#AppUrl}
-DefaultDirName={autopf}\JK_PasswordManager
+DefaultDirName={autoappdata}\{#Name}
 DefaultGroupName={#Name}
 AllowNoIcons=yes
-LicenseFile=LICENSE
-; C:\Users\USER\Documents\Programs\JK Password Manager\SetupFile\LICENSE
-; Remove the following line to run in administrative install mode (install for all users.)
-; PrivilegesRequired=lowest
-PrivilegesRequiredOverridesAllowed=dialog
+DisableDirPage=auto
+DisableWelcomePage=no
+DisableProgramGroupPage=yes
+PrivilegesRequired=lowest
+SetupIconFile=..\assets\icon.ico
+; WizardImageFile=wizardimage.bmp
+UninstallDisplayIcon=..\assets\icon.ico
+UninstallDisplayName={#Name}-Setup
+ChangesAssociations=yes
+LicenseFile=..\..\..\LICENSE
+PrivilegesRequired=lowest
 OutputDir=installer
-; C:\Users\USER\Desktop
-OutputBaseFilename=JK_PasswordManagerSetupFile
+OutputBaseFilename={#Name}-installer-{#Version}
 Compression=lzma
 SolidCompression=yes
 WizardStyle=modern
@@ -34,12 +37,11 @@ WizardStyle=modern
 Name: "english"; MessagesFile: "compiler:Default.isl"
 
 [Tasks]
-Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
+Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: checkedonce
 
 [Files]
-Source: "..\..\..\src\build\{#Executable}"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\..\..\src\build\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
-; NOTE: Don't use "Flags: ignoreversion" on any shared system files
+Source: "..\..\..\out\windows-out\{#Executable}"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\..\..\src\assets"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 
 [Icons]
 Name: "{group}\{#Name}"; Filename: "{app}\{#Executable}"

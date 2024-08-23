@@ -26,7 +26,6 @@ UninstallDisplayIcon=..\assets\icon.ico
 UninstallDisplayName={#Name}-Setup
 ChangesAssociations=yes
 LicenseFile=..\..\..\LICENSE
-PrivilegesRequired=lowest
 OutputDir=installer
 OutputBaseFilename={#Name}-installer-{#Version}
 Compression=lzma

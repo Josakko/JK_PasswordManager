@@ -1,21 +1,20 @@
 #!/bin/bash
 
+INSTDIR="$HOME/.local/share/jkpm"
 
-INSTDIR="$HOME/.local/share/"
-
-if [[ ! -d ${INSTDIR}jkpm ]]; then
-    echo "Installing jkpm"
-    cp -r /usr/share/jkpm-inst ${INSTDIR}jkpm
+if [[ ! -d $INSTDIR ]]; then
+    echo "[+] Installing jkpm"
+    cp -r /usr/share/jkpm-inst $INSTDIR
 fi
 
-cd ${INSTDIR}jkpm || echo "Installation failed, try to reinstall" && exit
+cd $INSTDIR # || echo "[-] Installation failed, try to reinstall or refer to docs" && exit
 
-if [[ ! -f ${INSTDIR}jkpm/jkpm ]]; then
-    cd ..
-    rm -rf ${INSTDIR}jkpm
-    cp -r /usr/share/jkpm-inst ${INSTDIR}jkpm
+cd ..
+if [[ ! -f $INSTDIR/jkpm ]]; then
+    rm -rf $INSTDIR
+    cp -r /usr/share/jkpm-inst $INSTDIR
 fi
 
 cd jkpm
-exec jkpm "$@"
+./jkpm "$@"
 

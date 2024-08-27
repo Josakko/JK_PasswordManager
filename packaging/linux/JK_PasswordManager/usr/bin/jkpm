@@ -3,16 +3,19 @@
 
 INSTDIR="$HOME/.local/share/"
 
-if [[ ! -d ${INSTDIR}/jkpm ]]; then
-    cp /usr/share/jkpm-inst $INSTDIR
+if [[ ! -d ${INSTDIR}jkpm ]]; then
+    echo "Installing jkpm"
+    cp -r /usr/share/jkpm-inst ${INSTDIR}jkpm
 fi
 
-cd $INSTDIR/jkpm
+cd ${INSTDIR}jkpm || echo "Installation failed, try to reinstall" && exit
 
-if [[ ! -f ${INSTDIR}/jkpm/jkpm ]]; then
-    rm -rf $INSTDIR/jkpm
-    cp /usr/share/jkpm-inst $INSTDIR
+if [[ ! -f ${INSTDIR}jkpm/jkpm ]]; then
+    cd ..
+    rm -rf ${INSTDIR}jkpm
+    cp -r /usr/share/jkpm-inst ${INSTDIR}jkpm
 fi
 
+cd jkpm
 exec jkpm "$@"
 

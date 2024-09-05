@@ -7,14 +7,14 @@ if [[ ! -d $INSTDIR ]]; then
     cp -r /usr/share/jkpm-inst $INSTDIR
 fi
 
-cd $INSTDIR # || echo "[-] Installation failed, try to reinstall or refer to docs" && exit
+cd $INSTDIR
 
 cd ..
 if [[ ! -f $INSTDIR/jkpm ]]; then
-    rm -rf $INSTDIR
-    cp -r /usr/share/jkpm-inst $INSTDIR
+    # rm -rf $INSTDIR
+    cp -r /usr/share/jkpm-inst/* $INSTDIR/
 fi
 
 cd jkpm
-./jkpm "$@"
+exec jkpm "@"
 

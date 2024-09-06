@@ -137,5 +137,4 @@ test.py
 test
 
 # FILES
-./packaging/linux/JK_PasswordManager/usr/share/JK_PasswordManager/JK_PasswordManager
-./packaging/linux/JK_Passwordmanager.AppDir/usr/bin/JK_PasswordManager
+./packaging/linux/JK_PasswordManager/usr/share/jkpm-inst/jkpm

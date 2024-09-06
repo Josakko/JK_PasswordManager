@@ -22,7 +22,7 @@ clean() {
     echo "[+] Removing output folders"
     while IFS= read -r line; do
         echo "[log] Deleting ./out/$line"
-        rm -rf "./out/$line"
+        sudo rm -rf "./out/$line"
     done < "./out/.gitignore"
 
     echo "[log] Removing windows packaging outputs"
@@ -56,6 +56,7 @@ cd ../../
 echo "[+] Finished compiling for linux"
 
 echo "[log] Packaging deb"
+cp ./out/linux-out/main.bin ./packaging/linux/JK_PasswordManager/usr/share/jkpm-inst/jkpm
 cd ./packaging/linux
 ./package.sh
 cd ../../
@@ -67,7 +68,7 @@ cd ./packaging/windows
 cd ../../
 echo "[+] Finished building web installer for windows"
 
-if [[ -d ./out/windows-out/JK_PasswordManager.exe ]]; then
+if [[ -f ./out/windows-out/JK_PasswordManager.exe ]]; then
     echo "[log] Packaging windows offline installer since windows executable is present"
     cd ./packaging/windows
     ./package-offline.sh

@@ -16,5 +16,5 @@ if [[ ! -f $INSTDIR/jkpm ]]; then
 fi
 
 cd jkpm
-exec jkpm "@"
+./jkpm "@"
 

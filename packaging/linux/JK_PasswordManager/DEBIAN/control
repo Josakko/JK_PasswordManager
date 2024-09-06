@@ -1,5 +1,5 @@
 Package: jkpm
-Version: 6.10
+Version: 7.0.0
 Section: utils
 Priority: optional
 Architecture: amd64

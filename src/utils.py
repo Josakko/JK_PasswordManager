@@ -6,7 +6,7 @@ import hashlib
 import os
 
 #!######### VERSION #########!#
-VERSION = "v6.10.0"
+VERSION = "v7.0.0"
 #!######### VERSION #########!#
 
 

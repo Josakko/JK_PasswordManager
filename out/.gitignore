@@ -1,4 +1,6 @@
 linux-out
 deb-out
 windows-out
+out
+release
 # do not remove this line, do not add newline

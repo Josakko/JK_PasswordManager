@@ -12,7 +12,7 @@ Copy-Item assets build\assets\
 
 pip install -r ..\requirements.txt
 
-python -m nuitka main.py --clang --onefile  --enable-plugins=tk-inter --standalone --disable-console --clean-cache=all --remove-output --output-dir=..\out\windows-out --output-filename=JK_PasswordManager.exe --windows-icon-from-ico=assets\icon.png --prefer-source-code # --follow-imports
+python -m nuitka main.py --clang --onefile  --enable-plugins=tk-inter --standalone --windows-console-mode=disable --clean-cache=all --remove-output --output-dir=..\out\windows-out --output-filename=JK_PasswordManager.exe --windows-icon-from-ico=assets\icon.png --prefer-source-code # --follow-imports
 
 Write-Output "Compiling finished!"
 pause

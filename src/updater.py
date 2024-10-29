@@ -86,7 +86,7 @@ def run_update(update_filename, current_filename):
 
     if sys.platform == "win32":
         try:
-            subprocess.Popen(cmd, creationflags=CREATE_NEW_PROCESS_GROUP, stderr=subprocess.DEVNULL, stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL)
+            subprocess.Popen(cmd, creationflags=subprocess.CREATE_NEW_PROCESS_GROUP, stderr=subprocess.DEVNULL, stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL)
         except: return False
         # subprocess.CREATE_NO_WINDOW, subprocess.DETACHED_PROCESS, subprocess.CREATE_NEW_PROCESS_GROUP
     

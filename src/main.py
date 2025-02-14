@@ -71,7 +71,7 @@ def main():
     splash.deiconify()
 
 
-    def resizer(event):
+    def resizer(event: tk.Event):
         global splash_img, resize_image, new_bg
         splash_img = Image.open(os.path.join("assets", "loading.png"))
         resize_image = splash_img.resize((event.width, event.height), Image.LANCZOS)

@@ -8,6 +8,8 @@ import tkinter.messagebox as msg
 from handlers import login_handler
 import csv
 import os
+from PIL import Image, ImageTk
+from dialogs.settings import Settings
 
 
 class Dashboard(tk.Frame):
@@ -20,13 +22,19 @@ class Dashboard(tk.Frame):
         self.data = data
         self.db: Database = db
 
+        font = ("Arial", 13)
+
         heading_frame = tk.Frame(self, bg="#33334d")
-        tk.Label(heading_frame, text="User Name : ", font=("arial", 13), fg="white", bg="#33334d").pack(padx=10, side="left")
-        tk.Label(heading_frame, text=self.user_name, font=("arial", 13), fg="white", bg="#33334d").pack(side="left")
+        tk.Label(heading_frame, text="Username : ", font=font, fg="white", bg="#33334d").pack(padx=10, side="left")
+        tk.Label(heading_frame, text=self.user_name, font=font, fg="white", bg="#33334d").pack(side="left")
         tk.Label(heading_frame, text=" " * 20, bg="#33334d").pack(padx=10, side="left")
-        tk.Label(heading_frame, text="Total: ", font=("arial", 13), fg="white", bg="#33334d", ).pack(side="left")
-        self.total_entries = tk.Label(heading_frame, text=len(self.data), font=("arial", 13), fg="white", bg="#33334d", )
+        tk.Label(heading_frame, text="Total: ", font=font, fg="white", bg="#33334d", ).pack(side="left")
+        self.total_entries = tk.Label(heading_frame, text=len(self.data), font=font, fg="white", bg="#33334d", )
         self.total_entries.pack(side="left")
+
+        self.settings_icon = tk.PhotoImage(file="assets/settings.png", height=32, width=32)
+        settings_button = tk.Button(heading_frame, text="Settings", image=self.settings_icon, command=lambda: Settings(self), relief="raised", width=50, font=font)
+        settings_button.pack(padx=10, pady=1, side="right")
 
         logout_button = tk.Button(heading_frame, text="LOGOUT", command=self.logout, width=15, relief="raised")
         logout_button.pack(padx=10, side="right")
@@ -105,15 +113,8 @@ class Dashboard(tk.Frame):
                                     command=lambda: PasswordGenerator(self) )
         password_generator_btn.pack(pady=10, padx=15, side="left")
         
-        delete_all_button = tk.Button(button_frame, text="Delete All Passwords", command=self.delete_all_rows, relief="raised", bg="red", width=20)
+        delete_all_button = tk.Button(button_frame, text="Delete All Passwords", command=self.delete_all_rows, relief="raised", bg="red", width=20, font=font)
         delete_all_button.pack(pady=10, padx=50, side="right")
-
-
-        export_button = tk.Button(button_frame, text="Export to CSV", command=self.export, relief="raised", width=15)
-        export_button.pack(pady=10, padx=15, side="right")
-        
-        import_button = tk.Button(button_frame, text="Import from CSV", command=self.import_, relief="raised", width=15)
-        import_button.pack(pady=10, padx=15, side="right")
 
         self.cp_menu = tk.Menu(self.table_frame, tearoff=0)
 
@@ -233,7 +234,7 @@ class Dashboard(tk.Frame):
 
 
     def delete_all_rows(self):
-        decision = msg.askokcancel("Warning", "Are you sure to delete all ?")
+        decision = msg.askokcancel("Warning", "Are you sure you want to delete all ?")
         if not decision:
             return
         
